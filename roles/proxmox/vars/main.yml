@@ -1,0 +1,30 @@
+---
+proxmox_machines:
+  - name: cerberus.{{homelab_domain|default(proxmox_default_domain) | split('.') | first }}
+    description: Authentication server
+    template: fedora.tmpl
+    ip: 192.168.1.2
+    memory: 2048
+    cores: 2
+    tags: [ ipa, fedora ]
+
+  - name: whales.{{ homelab_domain|default(proxmox_default_domain) | split('.') | first }}
+    description: Container server
+    template: debian.tmpl
+    ip: 192.168.1.10
+    memory: 8192
+    cores: 6
+    tags: [ docker, debian ]
+
+proxmox_templates:
+  - name: ubuntu.tmpl
+    description: Ubuntu Server 23.10 (Mantic Minotaur)
+    url: https://cloud-images.ubuntu.com/releases/23.10/release/ubuntu-23.10-server-cloudimg-amd64.img
+
+  - name: debian.tmpl
+    description: Debian Server 12 (Bookworm)
+    url: https://cloud.debian.org/images/cloud/bookworm/latest/debian-12-generic-amd64.qcow2
+
+  - name: fedora.tmpl
+    description: Fedora Server 38
+    url: https://download.fedoraproject.org/pub/fedora/linux/releases/38/Cloud/x86_64/images/Fedora-Cloud-Base-38-1.6.x86_64.qcow2

@@ -1,0 +1,21 @@
+---
+# -- | Role defaults
+state: present
+
+# -- | Proxmox defaults
+proxmox_default_cores: 1                                        # Default number of cores
+proxmox_default_disk: 50G                                       # Default disk size
+proxmox_default_domain: lab                                     # Default DNS domain
+proxmox_default_gateway: "{{ ansible_default_ipv4.gateway }}"   # Default gateway
+proxmox_default_hostname: lab                                   # Default gateway
+proxmox_default_password: toor                                  # Default password
+proxmox_default_memory: 2048                                    # Default RAM size (MB)
+proxmox_default_os: l26                                         # Default OS type
+proxmox_default_storage: local-lvm                              # Default storage
+proxmox_default_user: root                                      # Default user
+proxmox_default_tags: template                                  # Default tags for templates
+proxmox_isofolder: /var/isos                                    # Default folder where ISOs are stored
+proxmox_machines: []                                            # List of machines to be installed
+proxmox_minid_machines: 1000                                    # Minimum ID for machines
+proxmox_minid_templates: 5000                                   # Minimum ID for templates
+proxmox_templates: []                                           # List of templates to be created

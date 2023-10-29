@@ -1,0 +1,12 @@
+---
+- name: Proxmox | Create default templates
+  ansible.builtin.import_tasks: templates.yml
+  when: state == 'present' or state == 'configured'
+
+- name: Proxmox | Create default VMs
+  ansible.builtin.import_tasks: machines.yml
+  when: state == 'present'
+
+- name: Proxmox | Uninstall
+  ansible.builtin.import_tasks: uninstall.yml
+  when: state == 'absent' and proxmox_uninstall_confirm | bool == true
