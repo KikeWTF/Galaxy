@@ -1,7 +1,8 @@
 <h1 align="center">
-    <a href="#"><img src=".github/readme/logo.png" alt="Galaxy" width="400" /></a>
+    <a href="#"><img src=".github/readme/logo.png" alt="Galaxy" width="300" /></a>
     <br />
-    <span>🌌 Ansible Galaxy for Homelab Deployment 🌌</span>
+    <span>🌌 My own Homelab 🌌</span>
+    <h3>deployment via Ansible</h3>
     <br />
     <br />
     <a href="https://github.com/kikewtf/galaxy/homelab/issues">
@@ -14,7 +15,6 @@
     <a href="https://www.ansible.com/">
         <img src="https://img.shields.io/badge/ansible%20version->=2.15.5-b4befe?labelColor=303446&style=for-the-badge&logo=ansible" />
     </a>
-    <br/><br/>
 </h1>
 
 <div align="center">
@@ -34,4 +34,5 @@ The following is a list of available Ansible roles for my own self-hosted Homela
 
 📁 **Role**: proxmox
 
-✏️ **Details**: Streamlines the [Proxmox](https://www.proxmox.com/en/) management process. This role allows you to create templates and custom virtual machines effortlessly (similar to [Terraform](https://www.terraform.io/)).
+✏️ **Details**: Streamlines the [Proxmox](https://www.proxmox.com/en/) management process. This role allows you to create templates and virtual machines effortlessly (similar to [Terraform](https://www.terraform.io/)).
+It also allows you to manage the status of VMs.
