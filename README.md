@@ -2,9 +2,7 @@
     <a href="#"><img src=".github/readme/logo.png" alt="Galaxy" width="300" /></a>
     <br />
     <span>🌌 My own Homelab 🌌</span>
-    <h3>deployment via Ansible</h3>
-    <br />
-    <br />
+    <br /><br />
     <a href="https://github.com/kikewtf/galaxy/homelab/issues">
         <img src="https://img.shields.io/github/issues/kikewtf/homelab?color=fab387&labelColor=303446&style=for-the-badge" />
     </a>
