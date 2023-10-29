@@ -1,0 +1,5 @@
+[proxmox]
+192.168.1.200
+
+[authentication]
+192.168.1.220

@@ -1,0 +1,26 @@
+# --- | Collection | ---
+
+namespace: kikewtf
+name: homelab
+description: My own ready-to-use homelab galaxy
+version: 1.0.0
+homepage: https://lab.kike.wtf/
+authors: [ Kike Fontan <homelab@kike.wtf> ]
+tags: [ homelab, self-hosted, kikewtf, lab ]
+
+# --- | Repository | ---
+
+readme: README.md
+license_file: LICENSE
+license: [ GPL-3.0-or-later ]
+repository: https://github.com/kikewtf/galaxy
+documentation: https://github.com/kikewtf/galaxy/blob/main/README.md
+issues: https://github.com/kikewtf/galaxy/issues
+
+# --- | Development | ---
+
+dependencies: {}
+build_ignore:
+  - /**/.env
+  - /**/.git
+  - /**/.github
