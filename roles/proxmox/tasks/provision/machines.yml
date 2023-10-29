@@ -62,15 +62,3 @@
       with_items: "{{ proxmox_machines }}"
       loop_control:
         index_var: index
-
-    - name: Proxmox | Machines - Start all the VMs
-      community.general.proxmox_kvm:
-        # status
-        name: "{{ item['name'] }}"
-        state: restarted
-        # connection
-        api_host: "{{ ansible_host }}"
-        api_user: "{{ ansible_user }}@pam"
-        api_password: "{{ ansible_password }}"
-        node: "{{ ansible_hostname }}"
-      with_items: "{{ proxmox_machines }}"

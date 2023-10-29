@@ -7,7 +7,7 @@
   roles:
     - role: proxmox
       state: configured
-  tags: [ configure, provision, templates ]
+  tags: [ configure, configured, download, downloaded, templates ]
 
 # --- | Install | ---
 
@@ -16,7 +16,34 @@
   roles:
     - role: proxmox
       state: present
-  tags: [ install, deploy, start, vms ]
+  tags: [ create, created, deploy, deployed, install, installed, provision, provisioned ]
+
+# --- | Start | ---
+
+- name: Proxmox | Start VMs
+  hosts: proxmox
+  roles:
+    - role: proxmox
+      state: started
+  tags: [ boot, booted, 'on', resume, resumed, start, started, up, vms ]
+
+# --- | Stop | ---
+
+- name: Proxmox | Stop VMs
+  hosts: proxmox
+  roles:
+    - role: proxmox
+      state: stopped
+  tags: [ down, 'off', pause, paused, shutdown, stop, stopped ]
+
+# --- | Clean | ---
+
+- name: Proxmox | Uninstall VMs, templates and ISOs
+  hosts: proxmox
+  roles:
+    - role: proxmox
+      state: cleaned
+  tags: [ clean, cleaned, delete, deleted, remove, removed ]
 
 # --- | Uninstall | ---
 
@@ -25,9 +52,4 @@
   roles:
     - role: proxmox
       state: absent
-  vars_prompt:
-    - name: proxmox_uninstall_confirm
-      prompt: Are you sure you want to uninstall all VMs, templates and ISOs?
-      private: no
-      default: "no"
-  tags: [ uninstall, clean, delete, remove, prune, purge ]
+  tags: [  prune, pruned, purge, purged, uninstall, uninstalled ]

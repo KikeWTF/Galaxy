@@ -6,4 +6,4 @@
   hosts: proxmox
   roles:
     - role: proxmox
-      state: present
+      state: started
