@@ -1,0 +1,14 @@
+---
+
+# --- | Proxmox | ---
+
+- name: Proxmox | Uninstall VMs, templates and ISOs
+  hosts: proxmox
+  roles:
+    - role: proxmox
+      state: absent
+  vars_prompt:
+    - name: proxmox_uninstall_confirm
+      prompt: Are you sure you want to uninstall all VMs, templates and ISOs?
+      private: no
+      default: "no"

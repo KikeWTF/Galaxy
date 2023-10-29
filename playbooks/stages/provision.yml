@@ -1,0 +1,9 @@
+---
+
+# --- | Proxmox | ---
+
+- name: Proxmox | Install and start the VMs
+  hosts: proxmox
+  roles:
+    - role: proxmox
+      state: present

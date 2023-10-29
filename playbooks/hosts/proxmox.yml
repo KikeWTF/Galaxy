@@ -1,0 +1,33 @@
+---
+
+# --- | Configure | ---
+
+- name: Proxmox | Only create templates
+  hosts: proxmox
+  roles:
+    - role: proxmox
+      state: configured
+  tags: [ configure, provision, templates ]
+
+# --- | Install | ---
+
+- name: Proxmox | Install VMs
+  hosts: proxmox
+  roles:
+    - role: proxmox
+      state: present
+  tags: [ install, deploy, start, vms ]
+
+# --- | Uninstall | ---
+
+- name: Proxmox | Uninstall VMs, templates and ISOs
+  hosts: proxmox
+  roles:
+    - role: proxmox
+      state: absent
+  vars_prompt:
+    - name: proxmox_uninstall_confirm
+      prompt: Are you sure you want to uninstall all VMs, templates and ISOs?
+      private: no
+      default: "no"
+  tags: [ uninstall, clean, delete, remove, prune, purge ]
