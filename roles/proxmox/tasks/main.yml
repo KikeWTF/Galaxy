@@ -1,25 +1,37 @@
 ---
-- name: Proxmox | Create templates
-  ansible.builtin.import_tasks: provision/templates.yml
-  when: state == 'started' or state == 'present' or state == 'provisioned'
+- name: Proxmox | Check the requirements
+  when: state in ['configured', 'started', 'stopped', 'absent']
+  ansible.builtin.import_tasks: prerequisites.yml
 
-- name: Proxmox | Create VMs
-  ansible.builtin.import_tasks: provision/machines.yml
-  when: state == 'started' or state == 'present'
+- name: Proxmox | Download the ISOs and copy files
+  when: state in ['present', 'configured', 'started']
+  ansible.builtin.import_tasks: download.yml
+
+- name: Proxmox | Create the templates
+  when: state in ['present', 'configured', 'started']
+  ansible.builtin.import_tasks: templates.yml
+
+- name: Proxmox | Create the VMs
+  when: state in ['configured', 'started']
+  ansible.builtin.import_tasks: machines.yml
 
 - name: Proxmox | Start/Stop VMs
+  when: state in ['started', 'stopped']
   ansible.builtin.import_tasks: status.yml
   vars:
     proxmox_machine_status: "{{ state }}"
-  when: state == 'started' or state == 'stopped'
 
-- name: Proxmox | Remove VMs and ISOs
+- name: Proxmox | Remove VMs
+  when: state == 'present'
   ansible.builtin.import_tasks: uninstall.yml
   vars:
     proxmox_templates: []
-  when: state == 'cleaned'
 
 - name: Proxmox | Remove everything
-  ansible.builtin.import_tasks: uninstall.yml
-  when:
-    - state == 'absent' and proxmox_uninstall_confirm | bool == true
+  when: state == 'absent'
+  block:
+    - name: Proxmox | Remove ISOs and files
+      ansible.builtin.import_tasks: clean.yml
+
+    - name: Proxmox | Remove VMs and templates
+      ansible.builtin.import_tasks: uninstall.yml

@@ -1,6 +1,6 @@
 ---
 # -- | Role defaults
-state: present
+state: started
 
 # -- | Proxmox defaults
 proxmox_default_cores: 1                                        # Default number of cores
@@ -11,6 +11,7 @@ proxmox_default_hostname: lab                                   # Default gatewa
 proxmox_default_password: toor                                  # Default password
 proxmox_default_memory: 2048                                    # Default RAM size (MB)
 proxmox_default_os: l26                                         # Default OS type
+proxmox_default_sshkeyfile: ""                                  # Default SSH key
 proxmox_default_storage: local-lvm                              # Default storage
 proxmox_default_user: root                                      # Default user
 proxmox_default_tags: template                                  # Default tags for templates

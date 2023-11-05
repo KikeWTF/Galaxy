@@ -1,24 +1,16 @@
 ---
-- name: Proxmox | Machines - Install the requirements
-  ansible.builtin.package:
-    name: "{{ item }}"
-    state: present
-  with_items:
-    - python3
-    - python3-proxmoxer
-
 - name: Proxmox | Machines - Gather facts
   block:
     - name: Proxmox | Machines - Get next VM ID
       ansible.builtin.shell:
-        cmd: pvesh get /cluster/nextid
+        cmd: /usr/bin/pvesh get /cluster/nextid
       register: proxmox_nextid
     
     - name: Proxmox | Machines - Check minimum VM ID condition
       ansible.builtin.set_fact:
         proxmox_nextid: "{{ proxmox_minid_machines | int }}"
       when: proxmox_nextid['stdout'] | int < proxmox_minid_machines | int
-    
+
 - name: Proxmox | Machines - Create the VMs
   block:
     - name: Proxmox | Machines - Clone the template
@@ -40,7 +32,7 @@
 
     - name: Proxmox | Machines - Configure the VMs
       ansible.builtin.shell: >
-        qm set {{ (item['ip'] | split('.') | last | int + proxmox_minid_machines)|default(proxmox_nextid | int + index) }}
+        /usr/sbin/qm set {{ (item['ip'] | split('.') | last | int + proxmox_minid_machines)|default(proxmox_nextid | int + index) }}
         --name {{ item['name'] }}
         --description "{{ item['description']|default('Clone of ' + item['template']) }}"
         --agent 1
@@ -59,6 +51,7 @@
         --scsihw virtio-scsi-pci
         --searchdomain {{ homelab_domain|default(proxmox_default_domain) | split('.') | first }}
         --tags {{ item['tags']|default(proxmox_default_tags) | join(',') }}
+        {{ '--sshkeys /tmp/ssh.pub' if not proxmox_check_sshkey['failed'] }}
       with_items: "{{ proxmox_machines }}"
       loop_control:
         index_var: index

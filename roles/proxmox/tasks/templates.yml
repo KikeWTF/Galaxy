@@ -3,43 +3,24 @@
   block:
     - name: Proxmox | Templates - Get next VM ID
       ansible.builtin.shell:
-        cmd: pvesh get /cluster/nextid
+        cmd: /usr/bin/pvesh get /cluster/nextid
       register: proxmox_nextid
     
     - name: Proxmox | Templates - Check minimum VM ID condition
       ansible.builtin.set_fact:
         proxmox_nextid: "{{ proxmox_minid_templates | int }}"
       when: proxmox_nextid['stdout'] | int < proxmox_minid_templates | int
-  
-- name: Proxmox | Templates - Download the templates
-  block:
-    - name: Proxmox | Templates - Ensure that ISO folder is created
-      ansible.builtin.file:
-        path: "{{ proxmox_isofolder }}"
-        state: directory
-        mode: 0755
-        owner: root
-        group: root
-    
-    - name: Proxmox | Templates - Download the templates
-      ansible.builtin.get_url:
-        url: "{{ item.url }}"
-        dest: "{{ proxmox_isofolder }}/{{ item.name }}.qcow2"
-        mode: 0444
-        owner: root
-        group: root
-      with_items: "{{ proxmox_templates }}"
 
 - name: Proxmox | Templates - Create the VMs
   block:
     - name: Proxmox | Templates - Resize images
       ansible.builtin.shell: >
-        qemu-img resize {{ proxmox_isofolder }}/{{ item.name }}.qcow2 {{ proxmox_default_disk }}
+        /usr/bin/qemu-img resize {{ proxmox_isofolder }}/{{ item.name }}.qcow2 {{ proxmox_default_disk }}
       with_items: "{{ proxmox_templates }}"
 
     - name: Proxmox | Templates - Create the base VMs
       ansible.builtin.shell: >
-        qm create {{ proxmox_nextid | int + index }}
+        /usr/sbin/qm create {{ proxmox_nextid | int + index }}
         --name {{ item['name'] }}
         --description "{{ item['description'] }}"
         --ciupgrade 1
@@ -61,6 +42,7 @@
         --searchdomain {{ homelab_domain|default(proxmox_default_domain) | split('.') | first }}
         --tags {{ item['tags']|default(proxmox_default_tags) }}
         --vga serial0
+        {{ '--sshkeys /tmp/ssh.pub' if not proxmox_check_sshkey['failed'] }}
       register: proxmox_check_createvm
       failed_when: proxmox_check_createvm['rc'] != 0 and 'already exists' not in proxmox_check_createvm['stderr']
       with_items: "{{ proxmox_templates }}"
@@ -80,7 +62,7 @@
     
     - name: Proxmox | Templates - Convert to templates
       ansible.builtin.shell:
-        cmd: qm template {{ proxmox_nextid | int + index }}
+        cmd: /usr/sbin/qm template {{ proxmox_nextid | int + index }}
       register: proxmox_check_template
       failed_when: proxmox_check_template['rc'] != 0 and 'template to a template' not in proxmox_check_template['stderr']
       with_items: "{{ proxmox_templates }}"

@@ -23,8 +23,3 @@
     api_password: "{{ ansible_password }}"
     node: "{{ ansible_hostname }}"
   with_items: "{{ proxmox_templates }}"
-
-- name: Proxmox | Uninstall - Remove the ISOS
-  ansible.builtin.file:
-    path: "{{ proxmox_isofolder }}"
-    state: absent
