@@ -6,8 +6,9 @@
   hosts: proxmox
   roles:
     - role: proxmox
-      state: configured
-  tags: [ configure, configured, download, downloaded, templates ]
+      state: present
+  become: yes
+  tags: [ present, templates ]
 
 # --- | Install | ---
 
@@ -15,8 +16,9 @@
   hosts: proxmox
   roles:
     - role: proxmox
-      state: present
-  tags: [ create, created, deploy, deployed, install, installed, provision, provisioned ]
+      state: configured
+  become: yes
+  tags: [ configure, configured, vms ]
 
 # --- | Start | ---
 
@@ -25,7 +27,8 @@
   roles:
     - role: proxmox
       state: started
-  tags: [ boot, booted, 'on', resume, resumed, start, started, up, vms ]
+  become: yes
+  tags: [ start, started ]
 
 # --- | Stop | ---
 
@@ -34,7 +37,8 @@
   roles:
     - role: proxmox
       state: stopped
-  tags: [ down, 'off', pause, paused, shutdown, stop, stopped ]
+  become: yes
+  tags: [ stop, stopped ]
 
 # --- | Clean | ---
 
@@ -43,7 +47,8 @@
   roles:
     - role: proxmox
       state: cleaned
-  tags: [ clean, cleaned, delete, deleted, remove, removed ]
+  become: yes
+  tags: [ clean, cleaned ]
 
 # --- | Uninstall | ---
 
@@ -52,4 +57,5 @@
   roles:
     - role: proxmox
       state: absent
-  tags: [  prune, pruned, purge, purged, uninstall, uninstalled ]
+  become: yes
+  tags: [ absent ]

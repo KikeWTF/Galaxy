@@ -1,0 +1,108 @@
+# --- | Server | ---
+serverDisplayName: {{ ldap_organization | title }}
+ServerURL: ldapi:///
+useTLS: no
+
+# --- | Localization | ---
+timeZone: Europe/Madrid
+defaultLanguage: en_US.utf8
+tools: treeViewSuffix: dc={{ ldap_domain | split('.') | join(',dc=') }}
+
+# --- | Login | ---
+Passwd: lam
+loginMethod: list
+Admins: cn=admin,dc={{ ldap_domain | split('.') | join(',dc=') }}
+loginSearchSuffix: dc={{ ldap_domain | split('.') | join(',dc=') }}
+
+# --- | Objects | ---
+types: suffix_user: ou=users,dc={{ ldap_domain | split('.') | join(',dc=') }}
+types: attr_user: #uid;#givenName;#sn;#uidNumber;#gidNumber
+types: modules_user: inetOrgPerson,posixAccount,shadowAccount
+types: suffix_group: ou=groups,dc={{ ldap_domain | split('.') | join(',dc=') }}
+types: attr_group: #cn;#gidNumber;#memberUID;#description
+types: modules_group: posixGroup
+modules: posixAccount_user_minUID: {{ ldap_minid }}
+modules: posixAccount_user_maxUID: {{ ldap_minid * 3 }}
+modules: posixAccount_user_uidGeneratorUsers: range
+modules: posixAccount_host_minMachine: {{ ldap_minid * 5 }}
+modules: posixAccount_host_maxMachine: {{ ldap_minid * 6 }}
+modules: posixAccount_host_uidGeneratorUsers: range
+modules: posixGroup_group_minGID: {{ ldap_minid  }}
+modules: posixGroup_group_maxGID: {{ ldap_minid * 3 }}
+modules: posixAccount_group_gidGeneratorUsers: range
+
+# --- | Other | ---
+pagedResults: false
+followReferrals: false
+referentialIntegrityOverlay: false
+hidePasswordPromptForExpiredPasswords: false
+scriptPath:
+scriptServer:
+scriptRights: 750
+scriptUserName:
+scriptSSHKey:
+scriptSSHKeyPassword:
+searchLimit: 0
+activeTypes: user,group
+accessLevel: 100
+loginSearchFilter: uid=%USER%
+loginSearchDN:
+loginSearchPassword:
+httpAuthentication: false
+lamProMailFrom: noreply@example.com
+lamProMailReplyTo:
+lamProMailSubject: Your password was reset
+lamProMailIsHTML: false
+lamProMailAllowAlternateAddress: true
+lamProMailText: Dear @@givenName@@ @@sn@@,+::++::+your password was reset to: @@newPassword@@+::++::++::+Best regards+::++::+deskside support+::+
+jobsBindPassword:
+jobsBindUser:
+jobsDatabase: SQLite
+jobsDBHost:
+jobsDBPort:
+jobsDBUser:
+jobsDBPassword:
+jobsDBName:
+jobToken: VdXBI7sA1hLZNiKMPVPA
+pwdResetAllowSpecificPassword: true
+pwdResetAllowScreenPassword: true
+pwdResetForcePasswordChange: true
+pwdResetDefaultPasswordOutput: 2
+twoFactorAuthentication: none
+twoFactorAuthenticationURL: https://localhost
+twoFactorAuthenticationClientId:
+twoFactorAuthenticationSecretKey:
+twoFactorAuthenticationDomain:
+twoFactorAuthenticationInsecure:
+twoFactorAuthenticationLabel:
+twoFactorAuthenticationOptional:
+twoFactorAuthenticationCaption:
+twoFactorAuthenticationAttribute: uid
+twoFactorAllowToRememberDevice: false
+twoFactorRememberDeviceDuration: 28800
+twoFactorRememberDevicePassword: dqnCz3Np3s7iOlYfcx-bsFQ4vfak-l
+hideDnPart:
+pwdPolicyMinLength:
+pwdPolicyMinLowercase:
+pwdPolicyMinUppercase:
+pwdPolicyMinNumeric:
+pwdPolicyMinSymbolic:
+modules: posixGroup_pwdHash: SSHA
+modules: posixAccount_pwdHash: SSHA
+types: customLabel_user:
+types: filter_user:
+types: customLabel_group:
+types: filter_group:
+types: hidden_user:
+types: hidden_group:
+tools: tool_hide_toolSchemaBrowser: false
+tools: tool_hide_toolProfileEditor: false
+tools: tool_hide_toolServerInformation: false
+tools: tool_hide_toolFileUpload: false
+tools: tool_hide_toolTests: false
+tools: tool_hide_TreeViewTool: false
+tools: tool_hide_toolPDFEditor: false
+tools: tool_hide_ImportExport: false
+tools: tool_hide_toolMultiEdit: false
+tools: tool_hide_toolWebauthn: false
+tools: tool_hide_toolOUEditor: false

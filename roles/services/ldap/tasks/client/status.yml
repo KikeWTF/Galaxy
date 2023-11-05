@@ -1,0 +1,6 @@
+---
+- name: LDAP | Status - Control SSSD service
+  ansible.builtin.service:
+    name: sssd
+    state: "{{ ldap_status }}"
+    enabled: "{{ ldap_status == 'started' }}"

@@ -1,0 +1,11 @@
+---
+ldap_admin_password: admin{{ ldap_organization | lower }}
+ldap_default_password: changeme
+ldap_domain: "{{ homelab_domain|default('home.lab') }}"
+ldap_minid: 10000
+ldap_organization: "{{ homelab_organization|default('Homelab') }}"
+ldap_server_hostname: cerberus
+ldap_server_ip: 192.168.1.2
+ldap_lam: true
+ldap_tls: true
+ldap_users: []

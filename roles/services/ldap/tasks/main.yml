@@ -1,0 +1,47 @@
+---
+- name: LDAP | Server actions
+  when:
+    - ansible_os_family | lower == 'debian'
+    - ldap_server_ip == ansible_default_ipv4.address
+  block:
+    - name: LDAP | Server - Install the service
+      when: state in ['present', 'configured', 'started']
+      ansible.builtin.import_tasks: server/install.yml
+
+    - name: LDAP | Server - Configure the service
+      when: state in ['configured', 'started']
+      ansible.builtin.import_tasks: server/configure.yml
+    
+    - name: LDAP | Server - Configure TLS connection
+      when: state in ['configured', 'started'] and ldap_tls
+      ansible.builtin.import_tasks: server/tls.yml
+    
+    - name: LDAP | Server - Install LDAP-Utils
+      when: state in ['configured', 'started']
+      ansible.builtin.import_tasks: server/utils.yml
+    
+    - name: LDAP | Server - Install LAM
+      when: state in ['configured', 'started'] and ldap_lam
+      ansible.builtin.import_tasks: server/lam.yml
+    
+    - name: LDAP | Start/Stop the services
+      when: state in ['started', 'stopped']
+      ansible.builtin.import_tasks: server/status.yml
+      vars:
+        ldap_status: "{{ state }}"
+
+- name: LDAP | Client actions
+  block:
+    - name: LDAP | Client - Install the SSSD client
+      when: state in ['present', 'configured', 'started']
+      ansible.builtin.import_tasks: client/sssd.yml
+    
+    - name: LDAP | Start/Stop the service
+      when: state in ['started', 'stopped']
+      ansible.builtin.import_tasks: client/status.yml
+      vars:
+        ldap_status: "{{ state }}"
+
+- name: LDAP | Uninstall the service
+  when: state == 'absent'
+  ansible.builtin.import_tasks: uninstall.yml

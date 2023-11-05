@@ -1,0 +1,76 @@
+---
+- name: LDAP | TLS - Generate the certificates
+  block:
+    - name: LDAP | TLS - Create the directory
+      ansible.builtin.file:
+        path: /etc/ldap/sasl2
+        state: directory
+        mode: 0755
+        owner: openldap
+        group: openldap
+    
+    - name: LDAP | TLS - Generate the private key
+      community.crypto.openssl_privatekey:
+        path: /etc/ldap/sasl2/ldap.key
+        type: RSA
+        size: 4096 # 2048
+        mode: 0600
+        owner: openldap
+        group: openldap
+    
+    - name: LDAP | TLS - Generate the certificate signing request
+      community.crypto.openssl_csr:
+        path: /etc/ldap/sasl2/ldap.csr
+        privatekey_path: /etc/ldap/sasl2/ldap.key
+        common_name: "{{ ansible_hostname }}.{{ ldap_domain }}"
+        organization_name: "{{ ldap_organization }}"
+        country_name: ES
+        state_or_province_name: Madrid
+        mode: 0644
+        owner: openldap
+        group: openldap
+
+    - name: LDAP | TLS - Generate the certificate
+      community.crypto.x509_certificate:
+        path: /etc/ldap/sasl2/ldap.crt
+        csr_path: /etc/ldap/sasl2/ldap.csr
+        privatekey_path: /etc/ldap/sasl2/ldap.key
+        selfsigned_not_after: +14600d
+        provider: selfsigned
+        force: yes
+        mode: 0644
+        owner: openldap
+        group: openldap
+    
+    - name: LDAP | TLS - Copy the CA certificate
+      ansible.builtin.copy:
+        src: /etc/ssl/certs/ca-certificates.crt
+        dest: /etc/ldap/sasl2/ca.crt
+        mode: 0644
+        owner: openldap
+        group: openldap
+
+- name: LDAP | TLS - Configure the server
+  community.general.ldap_attrs:
+    dn: cn=config
+    attributes:
+      olcTLSCertificateFile: /etc/ldap/sasl2/ldap.crt
+      olcTLSCertificateKeyFile: /etc/ldap/sasl2/ldap.key
+      olcTLSCACertificateFile: /etc/ldap/sasl2/ca.crt
+      olcTLSCipherSuite: SECURE128:PFS:-VERS-SSL3.0:-VERS-TLS-ALL:+VERS-TLS1.2:+VERS-TLS1.3:-SHA1:-ARCFOUR-128
+      olcTLSProtocolMin: 3.3
+      olcTLSVerifyClient: never
+      olcTLSRandFile: /dev/urandom
+
+- name: LDAP | TLS - Modify the service configuration
+  ansible.builtin.lineinfile:
+    path: /etc/default/slapd
+    regexp: '^SLAPD_SERVICES='
+    line: SLAPD_SERVICES="ldapi:/// ldaps:///"
+    state: present
+
+- name: LDAP | TLS - Restart the service
+  ansible.builtin.service:
+    name: slapd
+    state: restarted
+    enabled: true

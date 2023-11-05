@@ -1,0 +1,3 @@
+# --- | General | ---
+BASE    dc={{ ldap_domain | split('.') | join(',dc=') }}
+URI     ldapi:///

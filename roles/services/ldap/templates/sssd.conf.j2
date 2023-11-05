@@ -1,0 +1,64 @@
+# --- | SSS | ---
+
+[sssd]
+config_file_version = 2
+domains = authentication
+services = nss, pam
+
+# --- | NSS | ---
+
+[nss]
+
+# --- | PAM | ---
+
+[pam]
+offline_credentials_expiration = 60
+
+# --- | Domains | ---
+
+[domain/authentication]
+# --- providers
+access_provider   = ldap
+auth_provider     = ldap
+#autofs_provider   = ldap
+#chpass_provider   = ldap
+id_provider       = ldap
+#resolver_provider = ldap
+#sudo_provider     = ldap
+
+# --- server
+ldap_uri = {{ 'ldaps' if ldap_tls else 'ldap' }}://{{ ldap_server_hostname }}.{{ ldap_domain }}
+ldap_network_timeout = 60
+ldap_schema = rfc2307
+
+{% if ldap_tls %}
+# --- tls
+ldap_id_use_start_tls = false
+ldap_tls_reqcert = demand
+ldap_tls_cacert = /etc/sssd/ldap.crt
+
+{% endif %}
+# --- connection
+#ldap_default_bind_dn = cn=admin,dc=lab,dc=kike,dc=wtf
+#ldap_default_authtok = adminhomelab
+#ldap_default_authtok_type = password
+
+# --- search
+ldap_search_base = dc={{ ldap_domain | split('.') | join(',dc=') }}
+ldap_search_timeout = 30
+
+# --- search (users)
+ldap_user_search_base = ou=users,dc={{ ldap_domain | split('.') | join(',dc=') }}
+ldap_access_order = filter
+ldap_access_filter = (objectClass=posixAccount)
+
+# --- search (groups)
+ldap_group_search_base = ou=groups,dc={{ ldap_domain | split('.') | join(',dc=') }}
+
+# --- cache
+cache_credentials = true
+ldap_purge_cache_timeout = 300
+
+# --- actions
+#ldap_pwd_policy = shadow
+#ldap_pwmodify_mode = exop

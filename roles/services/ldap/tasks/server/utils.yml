@@ -1,0 +1,13 @@
+---
+- name: LDAP | Client - Install the packages
+  ansible.builtin.package:
+    name: ldap-utils
+    state: latest
+
+- name: LDAP | Client - Configure the LDAP client
+  ansible.builtin.template:
+    src: ldap.conf.j2
+    dest: /etc/ldap/ldap.conf
+    owner: root
+    group: root
+    mode: 0644

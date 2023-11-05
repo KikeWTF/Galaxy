@@ -1,0 +1,51 @@
+---
+
+# --- | Configure | ---
+
+- name: LDAP | Install the service
+  hosts: authentication
+  roles:
+    - role: services/ldap
+      state: present
+  become: yes
+  tags: [ present ]
+
+# --- | Install | ---
+
+- name: LDAP | Install and configure the service
+  hosts: authentication
+  roles:
+    - role: services/ldap
+      state: configured
+  become: yes
+  tags: [ configure, configured ]
+
+# --- | Start | ---
+
+- name: LDAP | Start the service
+  hosts: authentication
+  roles:
+    - role: services/ldap
+      state: started
+  become: yes
+  tags: [ start, started ]
+
+# --- | Stop | ---
+
+- name: LDAP | Stop VMs
+  hosts: authentication
+  roles:
+    - role: services/ldap
+      state: stopped
+  become: yes
+  tags: [ stop, stopped ]
+
+# --- | Uninstall | ---
+
+- name: LDAP | Uninstall the service
+  hosts: authentication
+  roles:
+    - role: services/ldap
+      state: absent
+  become: yes
+  tags: [ absent ]

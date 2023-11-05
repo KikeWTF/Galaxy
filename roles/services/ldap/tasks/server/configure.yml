@@ -1,0 +1,139 @@
+---
+- name: LDAP | Configure - Remove default databases
+  block:
+    - name: LDAP | Configure - Stop the service
+      ansible.builtin.service:
+        name: slapd
+        state: stopped
+        enabled: false
+    
+    - name: LDAP | Configure - Remove database folder
+      ansible.builtin.file:
+        path: /var/lib/ldap
+        state: absent
+    
+    - name: LDAP | Configure - Recreate database directory
+      ansible.builtin.file:
+        path: /var/lib/ldap
+        state: directory
+        mode: 0700
+        owner: openldap
+        group: openldap
+
+    - name: LDAP | Configure - Start the service
+      ansible.builtin.service:
+        name: slapd
+        state: started
+        enabled: true
+    
+- name: LDAP | Configure - Default Domain
+  block:
+    - name: LDAP | Configure - Default DC
+      community.general.ldap_entry:
+        dn: dc={{ ldap_domain | split('.') | join(',dc=') }}
+        state: present
+        objectClass: [top, dcObject, organization]
+        attributes:
+          dc: "{{ ldap_domain | split('.') | first }}"
+          o: "{{ ldap_organization | lower }}"
+        # connection
+        bind_dn: cn=admin,dc={{ ldap_domain | split('.') | join(',dc=') }}
+        bind_pw: "{{ ldap_admin_password }}"
+
+    - name: LDAP | Configure - Default OUs
+      community.general.ldap_entry:
+        dn: ou={{ item }},dc={{ ldap_domain | split('.') | join(',dc=') }}
+        state: present
+        objectClass: [organizationalUnit]
+        attributes:
+          ou: "{{ item }}"
+        # connection
+        bind_dn: cn=admin,dc={{ ldap_domain | split('.') | join(',dc=') }}
+        bind_pw: "{{ ldap_admin_password }}"
+      with_items:
+        - groups
+        - users
+        - system
+    
+    - name: LDAP | Configure - Proxy user
+      community.general.ldap_entry:
+        dn: cn=proxy,ou=system,dc={{ ldap_domain | split('.') | join(',dc=') }}
+        state: present
+        objectClass: [simpleSecurityObject, organizationalRole]
+        attributes:
+          cn: proxy
+          userPassword: readonly
+        # connection
+        bind_dn: cn=admin,dc={{ ldap_domain | split('.') | join(',dc=') }}
+        bind_pw: "{{ ldap_admin_password }}"
+
+    - name: LDAP | Configure - Default Groups
+      community.general.ldap_entry:
+        dn: cn={{ item }},ou=groups,dc={{ ldap_domain | split('.') | join(',dc=') }}
+        state: present
+        objectClass: [posixGroup]
+        attributes:
+          cn: "{{ item }}"
+          gidNumber: "{{ ldap_minid + idx }}"
+          description: "{{ item | title }} users"
+        # connection
+        bind_dn: cn=admin,dc={{ ldap_domain | split('.') | join(',dc=') }}
+        bind_pw: "{{ ldap_admin_password }}"
+      with_items: "{{ ldap_users | map(attribute='group') | unique | map('lower') }}"
+      loop_control:
+        index_var: idx
+
+    - name: LDAP | Configure - Default Users
+      community.general.ldap_entry:
+        dn: cn={{ item.surname | lower }},ou=users,dc={{ ldap_domain | split('.') | join(',dc=') }}
+        state: present
+        objectClass:
+          - inetOrgPerson
+          - posixAccount
+          - shadowAccount
+        attributes:
+          # posixAccount
+          cn: "{{ item.surname | lower }}"
+          uid: "{{ item.surname | lower }}"
+          uidNumber: "{{ ldap_minid + idx }}"
+          gidNumber: "{{ (ldap_users | map(attribute='group') | unique).index(item.group) + ldap_minid }}"
+          gecos: "{{ item.name | title }} {{ item.surname | title }}"
+          description: "{{ item.name | title }} {{ item.surname | title }}"
+          homeDirectory: "{{ '/nonexistent' if item.system|default(false) else '/home/' + item.group + '/' + item.surname | lower }}"
+          loginShell: /bin/{{ 'false' if item.system|default(false) else 'bash' }}
+          # inetOrgPerson
+          sn: "{{ item.surname | title }}"
+          userPassword: "{{ item.password }}"
+          givenName: "{{ item.name | title }}"
+          displayName: "{{ item.name | title }} {{ item.surname | title }}"
+          mail: "{{ item.group | lower if item.system|default(false) else item.name | lower }}@{{ ldap_domain }}"
+          # TODO: shadowAccount (force password change on first login)
+          #shadowMin: 0
+          #shadowMax: 99999
+          #shadowLastChange: 0
+        # connection
+        bind_dn: cn=admin,dc={{ ldap_domain | split('.') | join(',dc=') }}
+        bind_pw: "{{ ldap_admin_password }}"
+      with_items: "{{ ldap_users }}"
+      loop_control:
+        index_var: idx
+
+    # TODO: ACLs
+    #- name: LDAP | Configure - Domain ACL
+    #  community.general.ldap_attrs:
+    #    dn: olcDatabase={1}mdb,cn=config
+    #    state: exact
+    #    attributes:
+    #      olcAccess:
+    #        - >-
+    #          {0}to attrs=userPassword,shadowLastChange
+    #          by self write
+    #          by anonymous auth
+    #          by dn="cn=admin,dc={{ ldap_domain | split('.') | join(',dc=') }}" write
+    #          by dn="cn=proxy,ou=system,dc={{ ldap_domain | split('.') | join(',dc=') }}" read
+    #          by * none
+    #        - >-
+    #          {1}to dn.base="dc={{ ldap_domain | split('.') | join(',dc=') }}"
+    #          by dn="cn=admin,dc={{ ldap_domain | split('.') | join(',dc=') }}" write
+    #          by dn="cn=proxy,ou=system,dc={{ ldap_domain | split('.') | join(',dc=') }}" read
+    #          by * read

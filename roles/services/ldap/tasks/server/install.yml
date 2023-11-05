@@ -1,0 +1,31 @@
+---
+- name: LDAP | Install - Install the packages
+  ansible.builtin.package:
+    name: "{{ item }}"
+    state: latest
+  with_items:
+    - python3-ldap
+    - ldap-utils
+    - slapd
+
+- name: LDAP | Install - Start the service
+  ansible.builtin.service:
+    name: slapd
+    state: started
+    enabled: true
+
+- name: LDAP | Install - Configure logging level
+  community.general.ldap_attrs:
+    dn: cn=config
+    state: exact
+    attributes:
+      olcLogLevel: stats  # stats log connections/operations/results
+
+- name: LDAP | Install - Configure the domain, admin and password
+  community.general.ldap_attrs:
+    dn: olcDatabase={1}mdb,cn=config
+    state: exact
+    attributes:
+      olcSuffix: dc={{ ldap_domain | split('.') | join(',dc=') }}
+      olcRootDN: cn=admin,dc={{ ldap_domain | split('.') | join(',dc=') }}
+      olcRootPW: "{{ ldap_admin_password }}"

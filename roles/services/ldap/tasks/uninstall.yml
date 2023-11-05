@@ -1,0 +1,43 @@
+---
+- name: LDAP | Uninstall - Define the packages
+  ansible.builtin.set_fact:
+    ldap_uninstall_packages:
+      # ansible (management)
+      - python3-ldap
+      # ldap / slapd (server)
+      - ldap-account-manager
+      - ldap-utils
+      - slapd
+      # sssd (client)
+      - libnss-sss
+      - libpam-sss
+      - libsss-sudo
+      - sssd
+      - sssd-tools
+
+- name: LDAP | Uninstall - Remove the packages
+  ansible.builtin.apt:
+    name: "{{ ldap_uninstall_packages }}"
+    state: absent
+    purge: yes
+    clean: yes
+    autoremove: yes
+  when: ansible_os_family | lower == 'debian'    
+
+- name: LDAP | Uninstall - Remove service files and directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: absent
+  with_items:
+    # ldap / slapd (server)
+    - /etc/default/slapd
+    - /etc/ldap
+    - /var/backups
+    - /var/lib/slapd
+    - /var/lib/ldap
+    - /var/run/slapd
+    # sssd (client)
+    - /etc/sssd
+    - /var/lib/sssd
+    - /var/log/sssd
+    - /var/run/sssd.pid

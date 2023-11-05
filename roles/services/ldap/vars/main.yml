@@ -1,0 +1,12 @@
+---
+ldap_users:
+  - name: Service
+    surname: Ansible
+    group: management
+    password: "ansible{{ ldap_organization | lower }}"
+    system: true
+
+  - name: Kike
+    surname: Puma
+    group: "{{ ldap_organization | lower }}"
+    password: "{{ ldap_default_password }}"
