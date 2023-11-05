@@ -23,7 +23,7 @@
         path: /etc/ldap/sasl2/ldap.csr
         privatekey_path: /etc/ldap/sasl2/ldap.key
         common_name: "{{ ansible_hostname }}.{{ ldap_domain }}"
-        organization_name: "{{ ldap_organization }}"
+        organization_name: "{{ ldap_domain | split('.') | first | title }}"
         country_name: ES
         state_or_province_name: Madrid
         mode: 0644

@@ -1,34 +1,34 @@
 # --- | Server | ---
-serverDisplayName: {{ ldap_organization | title }}
+serverDisplayName: {{ ldap_domain | split('.') | first | title }}
 ServerURL: ldapi:///
 useTLS: no
 
 # --- | Localization | ---
 timeZone: Europe/Madrid
 defaultLanguage: en_US.utf8
-tools: treeViewSuffix: dc={{ ldap_domain | split('.') | join(',dc=') }}
+tools: treeViewSuffix: {{ ldap_dn }}
 
 # --- | Login | ---
 Passwd: lam
 loginMethod: list
-Admins: cn=admin,dc={{ ldap_domain | split('.') | join(',dc=') }}
-loginSearchSuffix: dc={{ ldap_domain | split('.') | join(',dc=') }}
+Admins: cn=admin,{{ ldap_dn }}
+loginSearchSuffix: {{ ldap_dn }}
 
 # --- | Objects | ---
-types: suffix_user: ou=users,dc={{ ldap_domain | split('.') | join(',dc=') }}
+types: suffix_user: ou=users,{{ ldap_dn }}
 types: attr_user: #uid;#givenName;#sn;#uidNumber;#gidNumber
 types: modules_user: inetOrgPerson,posixAccount,shadowAccount
-types: suffix_group: ou=groups,dc={{ ldap_domain | split('.') | join(',dc=') }}
+types: suffix_group: ou=groups,{{ ldap_dn }}
 types: attr_group: #cn;#gidNumber;#memberUID;#description
 types: modules_group: posixGroup
 modules: posixAccount_user_minUID: {{ ldap_minid }}
-modules: posixAccount_user_maxUID: {{ ldap_minid * 3 }}
+modules: posixAccount_user_maxUID: {{ ldap_maxid }}
 modules: posixAccount_user_uidGeneratorUsers: range
-modules: posixAccount_host_minMachine: {{ ldap_minid * 5 }}
-modules: posixAccount_host_maxMachine: {{ ldap_minid * 6 }}
+modules: posixAccount_host_minMachine: {{ ldap_maxid + 1 }}
+modules: posixAccount_host_maxMachine: {{ ldap_maxid * 2 - ldap_minid }}
 modules: posixAccount_host_uidGeneratorUsers: range
-modules: posixGroup_group_minGID: {{ ldap_minid  }}
-modules: posixGroup_group_maxGID: {{ ldap_minid * 3 }}
+modules: posixGroup_group_minGID: {{ ldap_minid }}
+modules: posixGroup_group_maxGID: {{ ldap_maxid }}
 modules: posixAccount_group_gidGeneratorUsers: range
 
 # --- | Other | ---

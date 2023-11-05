@@ -3,10 +3,15 @@ ldap_users:
   - name: Service
     surname: Ansible
     group: management
-    password: "ansible{{ ldap_organization | lower }}"
+    password: ansible{{ ldap_domain | split('.') | first | title }}
     system: true
 
   - name: Kike
     surname: Puma
-    group: "{{ ldap_organization | lower }}"
+    group: "{{ ldap_domain | split('.') | first | title }}"
+    password: "{{ ldap_default_password }}"
+
+  - name: Cris
+    surname: Suraei
+    group: "{{ ldap_domain | split('.') | first | title }}"
     password: "{{ ldap_default_password }}"

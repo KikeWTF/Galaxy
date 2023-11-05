@@ -39,21 +39,22 @@ ldap_tls_cacert = /etc/sssd/ldap.crt
 
 {% endif %}
 # --- connection
-#ldap_default_bind_dn = cn=admin,dc=lab,dc=kike,dc=wtf
-#ldap_default_authtok = adminhomelab
-#ldap_default_authtok_type = password
+# TODO: Proxy user to query LDAP
+ldap_default_bind_dn = cn=proxy,ou=system,{{ ldap_dn }}
+ldap_default_authtok = readonly
+ldap_default_authtok_type = password
 
 # --- search
-ldap_search_base = dc={{ ldap_domain | split('.') | join(',dc=') }}
+ldap_search_base = {{ ldap_dn }}
 ldap_search_timeout = 30
 
 # --- search (users)
-ldap_user_search_base = ou=users,dc={{ ldap_domain | split('.') | join(',dc=') }}
+ldap_user_search_base = ou=users,{{ ldap_dn }}
 ldap_access_order = filter
 ldap_access_filter = (objectClass=posixAccount)
 
 # --- search (groups)
-ldap_group_search_base = ou=groups,dc={{ ldap_domain | split('.') | join(',dc=') }}
+ldap_group_search_base = ou=groups,{{ ldap_dn }}
 
 # --- cache
 cache_credentials = true

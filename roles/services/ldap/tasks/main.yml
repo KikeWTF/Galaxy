@@ -8,6 +8,14 @@
       when: state in ['present', 'configured', 'started']
       ansible.builtin.import_tasks: server/install.yml
 
+    - name: LDAP | Server - Configure the server properties
+      when: state in ['present', 'configured', 'started']
+      ansible.builtin.import_tasks: server/properties.yml
+    
+    - name: LDAP | Server - Clean the configuration
+      when: state in ['present', 'configured', 'started']
+      ansible.builtin.import_tasks: server/clean.yml
+
     - name: LDAP | Server - Configure the service
       when: state in ['configured', 'started']
       ansible.builtin.import_tasks: server/configure.yml
