@@ -1,0 +1,4 @@
+{
+    "ansible.lightspeed.enabled": false,
+    "redhat.telemetry.enabled": false
+}
