@@ -34,6 +34,12 @@
     creates: /etc/sssd/ldap.crt
   when: ldap_tls
 
+- name: LDAP | SSSD - Enable PAM MkHomeDir
+  ansible.builtin.shell: >
+    pam-auth-update
+    --enable mkhomedir
+  when: ansible_os_family | lower == 'debian'
+
 - name: LDAP | SSSD - Restart the service
   ansible.builtin.service:
     name: sssd
