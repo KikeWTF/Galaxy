@@ -85,3 +85,17 @@
     bind_dn: cn={{ ldap_admin_user }},{{ ldap_dn }}
     bind_pw: "{{ ldap_admin_pass }}"
   with_items: "{{ ldap_sudo_rules | selectattr('name', 'ne', '%sudoers') }}"
+
+- name: LDAP | Configure - Default sudoers group
+  community.general.ldap_entry:
+    dn: cn=sudoers,ou=groups,{{ ldap_dn }}
+    state: present
+    objectClass: [top, posixGroup]
+    attributes:
+      cn: sudoers
+      gidNumber: "{{ ldap_minid }}"
+      description: Sudoers group
+      memberUid: "{{ ldap_users | selectattr('sudo', 'defined') | selectattr('sudo', 'equalto', true) | map(attribute='surname') | map('lower') }}"
+    # connection
+    bind_dn: cn={{ ldap_admin_user }},{{ ldap_dn }}
+    bind_pw: "{{ ldap_admin_pass }}"
