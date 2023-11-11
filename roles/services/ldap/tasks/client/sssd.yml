@@ -6,7 +6,7 @@
   with_items:
     - libnss-sss
     - libpam-sss
-    - libsss-sudo # TODO: Sudo permissions using SSSD
+    - libsss-sudo
     - sssd        # TODO: Template /etc/default/sssd
     - sssd-tools
     - sudo

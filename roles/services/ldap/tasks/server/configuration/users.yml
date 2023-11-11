@@ -16,7 +16,7 @@
       loginShell: /bin/{{ 'sh' if item.system|default(false) else 'bash' }}
       # inetOrgPerson
       sn: "{{ item.surname | title }}"
-      userPassword: "{{ item.password |default(ldap_default_passw) }}"
+      userPassword: "{{ item.password |default(ldap_default_pass) }}"
       givenName: "{{ item.name|default(omit) | title }}"
       displayName: "{{ item.name|default('') | title }} {{ item.surname | title }}"
       mail: "{{ item.group|default(ldap_default_group) | lower if item.system|default(false) else item.name|default(item.surname) | lower }}@{{ (ldap_fqdn | split ('.'))[1:] }}"
