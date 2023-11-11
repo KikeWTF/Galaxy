@@ -1,0 +1,57 @@
+---
+- name: LDAP | Configure - Default Policies OU
+  community.general.ldap_entry:
+    dn: ou=policies,{{ ldap_dn }}
+    state: present
+    objectClass: [organizationalUnit]
+    attributes:
+      ou: policies
+      description: Policies organizational unit
+    # connection
+    bind_dn: cn=admin,{{ ldap_dn }}
+    bind_pw: "{{ ldap_admin_password }}"
+
+- name: LDAP | Configure - Activate password policies module
+  community.general.ldap_attrs:
+    dn: cn=module{0},cn=config
+    state: present
+    attributes:
+      olcModuleLoad: "ppolicy"
+
+- name: LDAP | Configure - Create password policies overlay
+  community.general.ldap_entry:
+    dn: olcOverlay={0}ppolicy,olcDatabase={1}mdb,cn=config
+    state: present
+    objectClass: [olcOverlayConfig, olcPPolicyConfig]
+    attributes:
+      olcOverlay: "{0}ppolicy"
+      olcPPolicyDefault: cn=default,ou=policies,{{ ldap_dn }}
+
+- name: LDAP | Configure - Create default password policy
+  community.general.ldap_entry:
+    dn: cn=default,ou=policies,{{ ldap_dn }}
+    state: present
+    objectClass: [top, device, pwdPolicy]
+    attributes:
+      cn: default
+      pwdAttribute: userPassword
+      # time (disabled)
+      pwdMaxAge: 0
+      pwdExpireWarning: 0
+      # strength
+      pwdCheckQuality: 2
+      pwdMinLength: 8
+      pwdInHistory: 5
+      # fail2ban
+      pwdMaxFailure: 5
+      pwdGraceAuthNLimit: 0
+      pwdFailureCountInterval: 0
+      pwdLockout: "TRUE"
+      pwdLockoutDuration: 1800
+      # misc
+      pwdMustChange: "TRUE"
+      pwdAllowUserChange: "TRUE"
+      pwdSafeModify: "TRUE"
+    # connection
+    bind_dn: cn=admin,{{ ldap_dn }}
+    bind_pw: "{{ ldap_admin_password }}"

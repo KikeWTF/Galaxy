@@ -3,7 +3,7 @@
 [sssd]
 config_file_version = 2
 domains = authentication
-services = nss, pam
+services = nss, pam, sudo
 
 # --- | NSS | ---
 
@@ -14,17 +14,21 @@ services = nss, pam
 [pam]
 offline_credentials_expiration = 60
 
+# --- | SUDO | ---
+
+[sudo]
+
 # --- | Domains | ---
 
 [domain/authentication]
 # --- providers
 access_provider   = ldap
 auth_provider     = ldap
-#autofs_provider   = ldap
-#chpass_provider   = ldap
+autofs_provider   = ldap
+chpass_provider   = ldap
 id_provider       = ldap
-#resolver_provider = ldap
-#sudo_provider     = ldap
+resolver_provider = ldap
+sudo_provider     = ldap
 
 # --- server
 ldap_uri = {{ 'ldaps' if ldap_tls else 'ldap' }}://{{ ldap_server_hostname }}.{{ ldap_domain }}
@@ -39,10 +43,9 @@ ldap_tls_cacert = /etc/sssd/ldap.crt
 
 {% endif %}
 # --- connection
-# TODO: Proxy user to query LDAP
 ldap_default_bind_dn = cn=proxy,ou=system,{{ ldap_dn }}
-ldap_default_authtok = readonly
-ldap_default_authtok_type = password
+ldap_default_authtok = SSSD_OBFUSCATED_PASSWORD
+ldap_default_authtok_type = obfuscated_password
 
 # --- search
 ldap_search_base = {{ ldap_dn }}
@@ -55,6 +58,9 @@ ldap_access_filter = (objectClass=posixAccount)
 
 # --- search (groups)
 ldap_group_search_base = ou=groups,{{ ldap_dn }}
+
+# --- search (sudo)
+ldap_sudo_search_base = ou=sudoers,{{ ldap_dn }}
 
 # --- cache
 cache_credentials = true

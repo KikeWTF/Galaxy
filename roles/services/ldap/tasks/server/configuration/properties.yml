@@ -1,0 +1,52 @@
+---
+- name: LDAP | Properties - Configure server logging level
+  community.general.ldap_attrs:
+    dn: cn=config
+    state: exact
+    attributes:
+      # 'stats' log connections/operations/results
+      olcLogLevel: stats
+
+- name: LDAP | Properties - Disable anonymous access
+  community.general.ldap_attrs:
+    dn: cn=config
+    state: exact
+    attributes:
+      olcDisallows: bind_anon
+
+- name: LDAP | Properties - Configure the server domain
+  community.general.ldap_attrs:
+    dn: olcDatabase={1}mdb,cn=config
+    state: exact
+    attributes:
+      olcSuffix: "{{ ldap_dn }}"
+
+- name: LDAP | Properties - Calculate the hash of the admin account
+  ansible.builtin.shell: >
+    /usr/sbin/slappasswd -s '{{ ldap_admin_password }}'
+  register: ldap_admin_password_hash
+
+- name: LDAP | Properties - Configure the server admin account
+  community.general.ldap_attrs:
+    dn: olcDatabase={1}mdb,cn=config
+    state: exact
+    attributes:
+      olcRootDN: cn=admin,{{ ldap_dn}}
+      olcRootPW: "{{ ldap_admin_password_hash.stdout }}"
+
+- name: LDAP | Properties - Configure ACL
+  community.general.ldap_attrs:
+    dn: olcDatabase={1}mdb,cn=config
+    state: exact
+    attributes:
+      olcAccess:
+        - >- # allow users to login and change their own password
+          {0}to attrs=userPassword,shadowLastChange
+          by self write
+          by anonymous auth
+        - >- # allow admin to manage, proxy to read, users to read their own entries and deny the rest
+          {1}to *
+          by dn.base="cn=admin,{{ ldap_dn }}" manage
+          by dn.base="cn=proxy,ou=system,{{ ldap_dn }}" read
+          by self read
+          by * none

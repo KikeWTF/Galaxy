@@ -1,0 +1,20 @@
+# --- | Connection | ---
+BASE    {{ ldap_dn }}
+URI     ldapi:///
+
+# --- | User | ---
+BINDDN  cn=proxy,ou=system,{{ ldap_dn }}
+BINDPW  {{ ldap_proxy_password_hash.stdout | default(ldap_proxy_password) }}
+
+# --- | OUs | ---
+USER_BASE       ou=users,{{ ldap_dn }}
+GROUP_BASE      ou=groups,{{ ldap_dn }}
+SUDOERS_BASE    ou=sudo,{{ ldap_dn }}
+
+# --- | TLS | ---
+TLS_CACERT  /etc/ldap/sasl2/ldap.crt
+TLS_REQCERT demand
+
+# --- | Misc | ---
+SASL_MECH   EXTERNAL
+SASL_REALM  {{ ldap_dn }}

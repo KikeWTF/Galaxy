@@ -6,7 +6,7 @@
 
 - name: LDAP | Client - Configure the LDAP client
   ansible.builtin.template:
-    src: ldap.conf.j2
+    src: server/ldap.conf.j2
     dest: /etc/ldap/ldap.conf
     owner: root
     group: root

@@ -1,0 +1,27 @@
+---
+- name: LDAP | Configure - Default DC
+  community.general.ldap_entry:
+    dn: "{{ ldap_dn }}"
+    state: present
+    objectClass: [top, dcObject, organization]
+    attributes:
+      dc: "{{ (ldap_domain | split('.'))[1] if ldap_domain | split('.') | count > 2 else ldap_domain | split('.') | first  }}"
+      o: "{{ ldap_domain | split('.') | first }}"
+    # connection
+    bind_dn: cn=admin,{{ ldap_dn }}
+    bind_pw: "{{ ldap_admin_password }}"
+
+- name: LDAP | Configure - Default OUs
+  community.general.ldap_entry:
+    dn: ou={{ item }},{{ ldap_dn }}
+    state: present
+    objectClass: [organizationalUnit]
+    attributes:
+      ou: "{{ item }}"
+      description: "{{ item | title }} organizational unit"
+    # connection
+    bind_dn: cn=admin,{{ ldap_dn }}
+    bind_pw: "{{ ldap_admin_password }}"
+  with_items:
+    - users
+    - groups

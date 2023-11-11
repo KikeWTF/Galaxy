@@ -1,0 +1,60 @@
+---
+- name: LDAP | Configure - Default users
+  community.general.ldap_entry:
+    dn: uid={{ item.surname | lower }},ou=users,{{ ldap_dn }}
+    state: present
+    objectClass: [inetOrgPerson, posixAccount, shadowAccount]
+    attributes:
+      # posixAccount
+      cn: "{{ item.surname | lower }}"
+      uid: "{{ item.surname | lower }}"
+      uidNumber: "{{ ldap_minid + idx }}"
+      gidNumber: "{{ ldap_minid + 1 if item.group|default(ldap_default_group) == ldap_default_group else (ldap_users | map(attribute='group') | unique).index(item.group) + ldap_minid + 2 }}"
+      gecos: "{{ item.name | title }} {{ item.surname | title }}"
+      description: "{{ item.name | title }} {{ item.surname | title }}"
+      homeDirectory: "{{ '/nonexistent' if item.system|default(false) else '/home/' + item.group|default(ldap_default_group) + '/' + item.surname | lower }}"
+      loginShell: /bin/{{ 'sh' if item.system|default(false) else 'bash' }}
+      # inetOrgPerson
+      sn: "{{ item.surname | title }}"
+      userPassword: "{{ item.password }}"
+      givenName: "{{ item.name|default(omit) | title }}"
+      displayName: "{{ item.name|default('') | title }} {{ item.surname | title }}"
+      mail: "{{ item.group|default(ldap_default_group) | lower if item.system|default(false) else item.name|default(item.surname) | lower }}@{{ ldap_domain }}"
+      pwdReset: "{{ 'TRUE' if item.password == ldap_default_password else omit }}"
+    # connection
+    bind_dn: cn=admin,{{ ldap_dn }}
+    bind_pw: "{{ ldap_admin_password }}"
+  with_items: "{{ ldap_users }}"
+  loop_control:
+    index_var: idx
+
+- name: LDAP | Configure - Default group
+  community.general.ldap_entry:
+    dn: cn={{ ldap_default_group }},ou=groups,{{ ldap_dn }}
+    state: present
+    objectClass: [posixGroup]
+    attributes:
+      cn: "{{ ldap_default_group }}"
+      gidNumber: "{{ ldap_minid + 1 }}"
+      description: "{{ ldap_default_group | title }} group"
+      memberUid: "{{ ldap_users | selectattr('group', 'undefined') | map(attribute='surname') | map('lower') }}"
+    # connection
+    bind_dn: cn=admin,{{ ldap_dn }}
+    bind_pw: "{{ ldap_admin_password }}"
+
+- name: LDAP | Configure - The rest of groups
+  community.general.ldap_entry:
+    dn: cn={{ item }},ou=groups,{{ ldap_dn }}
+    state: present
+    objectClass: [posixGroup]
+    attributes:
+      cn: "{{ item }}"
+      gidNumber: "{{ ldap_minid + idx + 2 }}"
+      description: "{{ item | title }} users"
+      memberUid: "{{ ldap_users | selectattr('group', 'defined') | selectattr('group', 'equalto', item) | map(attribute='surname') | map('lower') }}"
+    # connection
+    bind_dn: cn=admin,{{ ldap_dn }}
+    bind_pw: "{{ ldap_admin_password }}"
+  with_items: "{{ ldap_users | map(attribute='group') | unique | map('lower') }}"
+  loop_control:
+    index_var: idx

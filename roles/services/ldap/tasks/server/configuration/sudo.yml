@@ -1,0 +1,87 @@
+---
+- name: LDAP | Configure - Create the schema
+  community.general.ldap_entry:
+    dn: cn=sudo,cn=schema,cn=config
+    state: present
+    objectClass: [olcSchemaConfig]
+    attributes:
+      cn: sudo
+      olcObjectClasses: ( 1.3.6.1.4.1.15953.9.2.1 NAME 'sudoRole' SUP top STRUCTURAL DESC 'Sudoer Entries' MUST ( cn ) MAY ( sudoUser $ sudoHost $ sudoCommand $ sudoRunAs $ sudoRunAsUser $ sudoRunAsGroup $ sudoOption $ description ) )
+      olcAttributeTypes:
+        - "( 1.3.6.1.4.1.15953.9.1.1 NAME 'sudoUser' DESC 'User(s) who may  run sudo' EQUALITY caseExactIA5Match SUBSTR caseExactIA5SubstringsMatch SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )"
+        - "( 1.3.6.1.4.1.15953.9.1.2 NAME 'sudoHost' DESC 'Host(s) who may run sudo' EQUALITY caseExactIA5Match SUBSTR caseExactIA5SubstringsMatch SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )"
+        - "( 1.3.6.1.4.1.15953.9.1.3 NAME 'sudoCommand' DESC 'Command(s) to be executed by sudo' EQUALITY caseExactIA5Match SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )"
+        - "( 1.3.6.1.4.1.15953.9.1.4 NAME 'sudoRunAs' DESC 'User(s) impersonated by sudo (deprecated)' EQUALITY caseExactIA5Match SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )"
+        - "( 1.3.6.1.4.1.15953.9.1.5 NAME 'sudoOption' DESC 'Options(s) followed by sudo' EQUALITY caseExactIA5Match SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )"
+        - "( 1.3.6.1.4.1.15953.9.1.6 NAME 'sudoRunAsUser' DESC 'User(s) impersonated by sudo' EQUALITY caseExactIA5Match SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )"
+        - "( 1.3.6.1.4.1.15953.9.1.7 NAME 'sudoRunAsGroup' DESC 'Group(s) impersonated by sudo' EQUALITY caseExactIA5Match SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )"
+  register: ldap_check_sudo_schema
+  failed_when: ldap_check_sudo_schema.failed and "duplicate" not in ldap_check_sudo_schema.exception | lower
+
+- name: LDAP | Configure - Create the sudoers OU
+  community.general.ldap_entry:
+    dn: ou=sudoers,{{ ldap_dn }}
+    state: present
+    objectClass: [organizationalUnit]
+    attributes:
+      ou: sudoers
+      description: Sudoers organizational unit
+    # connection
+    bind_dn: cn=admin,{{ ldap_dn }}
+    bind_pw: "{{ ldap_admin_password }}"
+
+- name: LDAP | Configure - Create the default rule
+  community.general.ldap_entry:
+    dn: cn=defaults,ou=sudoers,{{ ldap_dn }}
+    state: present
+    objectClass: [top, sudoRole]
+    attributes:
+      cn: defaults
+      description: Default sudo rules
+      # sudo
+      sudoOption:
+        - env_reset
+        - env_keep =  "COLORS DISPLAY HOSTNAME HISTSIZE INPUTRC KDEDIR LS_COLORS"
+        - env_keep += "MAIL PS1 PS2 QTDIR USERNAME LANG LC_ADDRESS LC_CTYPE"
+        - env_keep += "LC_COLLATE LC_IDENTIFICATION LC_MEASUREMENT LC_MESSAGES"
+        - env_keep += "LC_MONETARY LC_NAME LC_NUMERIC LC_PAPER LC_TELEPHONE"
+        - env_keep += "LC_TIME LC_ALL LANGUAGE LINGUAS _XKB_CHARSET XAUTHORITY"
+        - secure_path = /sbin:/bin:/usr/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin
+    # connection
+    bind_dn: cn=admin,{{ ldap_dn }}
+    bind_pw: "{{ ldap_admin_password }}"
+
+- name: LDAP | Configure - Create the wheel rules
+  community.general.ldap_entry:
+    dn: cn=%sudoers,ou=sudoers,{{ ldap_dn }}
+    state: present
+    objectClass: [top, sudoRole]
+    attributes:
+      cn: '%sudoers'
+      description: "Sudoers rule"
+      # sudo
+      sudoUser: '%sudoers'
+      sudoHost: ALL
+      sudoCommand: ALL
+      sudoRunAsUser: ALL
+    # connection
+    bind_dn: cn=admin,{{ ldap_dn }}
+    bind_pw: "{{ ldap_admin_password }}"
+
+- name: LDAP | Configure - Create the rest of rules
+  community.general.ldap_entry:
+    dn: cn={{ item.name }},ou=sudoers,{{ ldap_dn }}
+    state: present
+    objectClass: [top, sudoRole]
+    attributes:
+      cn: "{{ item.name }}"
+      description: "{{ item.name | title }} sudo rule"
+      # sudo
+      sudoUser: "{{ item.name }}"
+      sudoHost: "{{ item.host|default(omit) }}"
+      sudoCommand: "{{ item.command|default(omit) }}"
+      sudoRunAsUser: "{{ item.runas|default(omit) }}"
+    # connection
+    bind_dn: cn=admin,{{ ldap_dn }}
+    bind_pw: "{{ ldap_admin_password }}"
+  with_items: "{{ ldap_sudo_rules | selectattr('name', 'ne', '%sudoers') }}"

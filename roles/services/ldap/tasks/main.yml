@@ -5,35 +5,49 @@
     - ldap_server_ip == ansible_default_ipv4.address
   block:
     - name: LDAP | Server - Install the service
-      when: state in ['present', 'configured', 'started']
+      when: state is not defined or state in ['present', 'configured', 'started']
       ansible.builtin.import_tasks: server/install.yml
 
-    - name: LDAP | Server - Configure the server properties
-      when: state in ['present', 'configured', 'started']
-      ansible.builtin.import_tasks: server/properties.yml
-    
-    - name: LDAP | Server - Clean the configuration
-      when: state in ['present', 'configured', 'started']
-      ansible.builtin.import_tasks: server/clean.yml
-
     - name: LDAP | Server - Configure the service
-      when: state in ['configured', 'started']
-      ansible.builtin.import_tasks: server/configure.yml
+      when: state is not defined or state in ['present', 'configured', 'started']
+      block:
+        - name: LDAP | Server - Clean the database
+          ansible.builtin.import_tasks: server/configuration/clean.yml
+        
+        - name: LDAP | Server - Configure the properties 
+          ansible.builtin.import_tasks: server/configuration/properties.yml
     
-    - name: LDAP | Server - Configure TLS connection
-      when: state in ['configured', 'started'] and ldap_tls
-      ansible.builtin.import_tasks: server/tls.yml
-    
-    - name: LDAP | Server - Install LDAP-Utils
-      when: state in ['configured', 'started']
-      ansible.builtin.import_tasks: server/utils.yml
-    
-    - name: LDAP | Server - Install LAM
-      when: state in ['configured', 'started'] and ldap_lam
-      ansible.builtin.import_tasks: server/lam.yml
+        - name: LDAP | Server - Configure the DIT
+          ansible.builtin.import_tasks: server/configuration/dit.yml
+        
+        - name: LDAP | Server - Configure the policies
+          ansible.builtin.import_tasks: server/configuration/policies.yml
+        
+        - name: LDAP | Server - Configure the proxy
+          ansible.builtin.import_tasks: server/configuration/proxy.yml
+        
+        - name: LDAP | Server - Configure the users
+          ansible.builtin.import_tasks: server/configuration/users.yml
+        
+        - name: LDAP | Server - Configure the sudo rules
+          ansible.builtin.import_tasks: server/configuration/sudo.yml
+        
+        - name: LDAP | Server - Configure the TLS connection
+          ansible.builtin.import_tasks: server/configuration/tls.yml
+          when: ldap_tls
+
+    - name: LDAP | Server - Install the server utilities
+      when: state is not defined or state in ['present', 'configured', 'started']
+      block:
+        - name: LDAP | Server - Install LDAP-Utils
+          ansible.builtin.import_tasks: server/utils/client.yml
+        
+        - name: LDAP | Server - Install LAM
+          ansible.builtin.import_tasks: server/utils/lam.yml
+          when: ldap_lam
     
     - name: LDAP | Start/Stop the services
-      when: state in ['started', 'stopped']
+      when: state|default('started') in ['started', 'stopped']
       ansible.builtin.import_tasks: server/status.yml
       vars:
         ldap_status: "{{ state }}"
