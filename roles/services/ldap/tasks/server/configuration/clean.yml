@@ -1,16 +1,16 @@
 ---
-- name: LDAP | Configure - Stop the service
+- name: LDAP | Clean - Stop the service
   ansible.builtin.service:
     name: slapd
     state: stopped
     enabled: false
 
-- name: LDAP | Configure - Remove database folder
+- name: LDAP | Clean - Remove database folder
   ansible.builtin.file:
     path: /var/lib/ldap
     state: absent
 
-- name: LDAP | Configure - Recreate database directory
+- name: LDAP | Clean - Recreate database directory
   ansible.builtin.file:
     path: /var/lib/ldap
     state: directory
@@ -18,7 +18,7 @@
     owner: openldap
     group: openldap
 
-- name: LDAP | Configure - Start the service
+- name: LDAP | Clean - Start the service
   ansible.builtin.service:
     name: slapd
     state: started

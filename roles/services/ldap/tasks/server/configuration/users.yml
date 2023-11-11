@@ -1,5 +1,5 @@
 ---
-- name: LDAP | Configure - Default users
+- name: LDAP | Users - Default users
   community.general.ldap_entry:
     dn: uid={{ item.surname | lower }},ou=users,{{ ldap_dn }}
     state: present
@@ -28,7 +28,7 @@
   loop_control:
     index_var: idx
 
-- name: LDAP | Configure - Default group
+- name: LDAP | Users - Default group
   community.general.ldap_entry:
     dn: cn={{ ldap_default_group }},ou=groups,{{ ldap_dn }}
     state: present
@@ -42,7 +42,7 @@
     bind_dn: cn={{ ldap_admin_user }},{{ ldap_dn }}
     bind_pw: "{{ ldap_admin_pass }}"
 
-- name: LDAP | Configure - The rest of groups
+- name: LDAP | Users - The rest of groups
   community.general.ldap_entry:
     dn: cn={{ item }},ou=groups,{{ ldap_dn }}
     state: present

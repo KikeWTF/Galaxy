@@ -1,0 +1,12 @@
+# --- | Files | ---
+SLAPD_CONF=
+SLAPD_PIDFILE=/var/run/slapd/slapd.pid
+SLAPD_SENTINEL_FILE=/etc/ldap/noslapd
+
+# --- | Service | ---
+SLAPD_SERVICES="ldapi:/// ldaps:///"
+SLAPD_OPTIONS=""
+
+# --- | User | ---
+SLAPD_USER="openldap"
+SLAPD_GROUP="openldap"

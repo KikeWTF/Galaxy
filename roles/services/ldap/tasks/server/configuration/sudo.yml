@@ -1,5 +1,5 @@
 ---
-- name: LDAP | Configure - Create the schema
+- name: LDAP | Sudo - Create the schema
   community.general.ldap_entry:
     dn: cn=sudo,cn=schema,cn=config
     state: present
@@ -18,7 +18,7 @@
   register: ldap_check_sudo_schema
   failed_when: ldap_check_sudo_schema.failed and "duplicate" not in ldap_check_sudo_schema.exception | lower
 
-- name: LDAP | Configure - Create the sudoers OU
+- name: LDAP | Sudo - Create the sudoers OU
   community.general.ldap_entry:
     dn: ou=sudoers,{{ ldap_dn }}
     state: present
@@ -30,7 +30,7 @@
     bind_dn: cn={{ ldap_admin_user }},{{ ldap_dn }}
     bind_pw: "{{ ldap_admin_pass }}"
 
-- name: LDAP | Configure - Create the default rule
+- name: LDAP | Sudo - Create the default rule
   community.general.ldap_entry:
     dn: cn=defaults,ou=sudoers,{{ ldap_dn }}
     state: present
@@ -51,7 +51,7 @@
     bind_dn: cn={{ ldap_admin_user }},{{ ldap_dn }}
     bind_pw: "{{ ldap_admin_pass }}"
 
-- name: LDAP | Configure - Create the wheel rules
+- name: LDAP | Sudo - Create the wheel rules
   community.general.ldap_entry:
     dn: cn=%sudoers,ou=sudoers,{{ ldap_dn }}
     state: present
@@ -68,7 +68,7 @@
     bind_dn: cn={{ ldap_admin_user }},{{ ldap_dn }}
     bind_pw: "{{ ldap_admin_pass }}"
 
-- name: LDAP | Configure - Create the rest of rules
+- name: LDAP | Sudo - Create the rest of rules
   community.general.ldap_entry:
     dn: cn={{ item.name }},ou=sudoers,{{ ldap_dn }}
     state: present
@@ -86,7 +86,7 @@
     bind_pw: "{{ ldap_admin_pass }}"
   with_items: "{{ ldap_sudo_rules | selectattr('name', 'ne', '%sudoers') }}"
 
-- name: LDAP | Configure - Default sudoers group
+- name: LDAP | Sudo - Default sudoers group
   community.general.ldap_entry:
     dn: cn=sudoers,ou=groups,{{ ldap_dn }}
     state: present
