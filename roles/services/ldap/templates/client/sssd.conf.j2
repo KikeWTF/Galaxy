@@ -31,7 +31,7 @@ resolver_provider = ldap
 sudo_provider     = ldap
 
 # --- server
-ldap_uri = {{ 'ldaps' if ldap_tls else 'ldap' }}://{{ ldap_fqdn }}
+ldap_uri = {{ 'ldaps' if ldap_tls else 'ldap' }}://{{ ldap_fqdn }}:{{ ldap_port }}
 ldap_network_timeout = 60
 ldap_schema = rfc2307
 

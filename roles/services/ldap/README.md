@@ -280,7 +280,6 @@ Here's an example playbook that uses the LDAP role:
 
 ## ✅ TODOs
 
-- [ ] Improve LAM configuration template.
 - [ ] Implement "automount" via LDAP.
 - [ ] Implement "hosts" via LDAP (maybe).
 - [ ] RedHat / CentOS / Fedora support.

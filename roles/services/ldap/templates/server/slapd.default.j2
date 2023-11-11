@@ -4,7 +4,7 @@ SLAPD_PIDFILE=/var/run/slapd/slapd.pid
 SLAPD_SENTINEL_FILE=/etc/ldap/noslapd
 
 # --- | Service | ---
-SLAPD_SERVICES="ldapi:/// ldaps:///"
+SLAPD_SERVICES="ldapi:/// ldaps://0.0.0.0:{{ ldap_port }}/"
 SLAPD_OPTIONS=""
 
 # --- | User | ---
