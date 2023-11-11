@@ -30,11 +30,11 @@ The following is a list of available Ansible roles for my own self-hosted Homela
 
 ## 🗃️ Ansible Roles Documentation
 
-📁 **Role**: proxmox
+📁 **Role**: [proxmox](./roles/proxmox/)
 
 ✏️ **Details**: Streamlines the [Proxmox](https://www.proxmox.com/en/) management process. This role allows you to create templates and virtual machines effortlessly (similar to [Terraform](https://www.terraform.io/)).
 It also allows you to manage the status of VMs.
 
-📁 **Role**: services/ldap
+📁 **Role**: [services/ldap](./roles/services/ldap/)
 
-✏️ **Details**: [OpenLDAP](https://www.openldap.org/) server and [SSSD](https://sssd.io/) client management for centralized management of users and groups.
+✏️ **Details**: This role installs and configures [OpenLDAP](https://www.openldap.org/) on the server and [SSSD](https://sssd.io/) on any host. It can be used to set up centralized LDAP authentication and authorization for users and groups.
