@@ -45,6 +45,7 @@ The following variables can be set to customize the LDAP configuration:
 | Server | ldap_lam | `true` | Enable LDAP Account Manager (LAM). |
 | Server | ldap_maxid | `30000` | The maximum UID/GID number to use for LDAP users/groups. |
 | Server | ldap_minid | `10000` | The minimum UID/GID number to use for LDAP users/groups. |
+| Both | ldap_port | `389` if not TLS, else `636` | The port to use for LDAP connections. |
 | Both | ldap_proxy_pass | `readonly` | The password to use for the read-only user. |
 | Both | ldap_proxy_user | `proxy` | The username for the read-only user. |
 | Server | ldap_server_ip | `192.168.1.2` | The IP address of the LDAP server. |
