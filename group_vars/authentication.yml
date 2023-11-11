@@ -1,19 +1,17 @@
 ---
+# --- | LDAP | ---
 ldap_users:
   - name: Service
     surname: Ansible
     group: management
-    password: ansible{{ ldap_domain | split('.') | first | lower }}
+    password: ansible{{ ldap_fqdn | split('.') | first | lower }}
     system: true
-
   - name: Kike
     surname: Puma
     sudo: true
-
   - name: Cris
     surname: Suraei
     sudo: true
-
 ldap_sudo_rules:
   - name: '%management'
     host: ALL

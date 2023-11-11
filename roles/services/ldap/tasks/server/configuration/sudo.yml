@@ -27,8 +27,8 @@
       ou: sudoers
       description: Sudoers organizational unit
     # connection
-    bind_dn: cn=admin,{{ ldap_dn }}
-    bind_pw: "{{ ldap_admin_password }}"
+    bind_dn: cn={{ ldap_admin_user }},{{ ldap_dn }}
+    bind_pw: "{{ ldap_admin_pass }}"
 
 - name: LDAP | Configure - Create the default rule
   community.general.ldap_entry:
@@ -48,8 +48,8 @@
         - env_keep += "LC_TIME LC_ALL LANGUAGE LINGUAS _XKB_CHARSET XAUTHORITY"
         - secure_path = /sbin:/bin:/usr/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin
     # connection
-    bind_dn: cn=admin,{{ ldap_dn }}
-    bind_pw: "{{ ldap_admin_password }}"
+    bind_dn: cn={{ ldap_admin_user }},{{ ldap_dn }}
+    bind_pw: "{{ ldap_admin_pass }}"
 
 - name: LDAP | Configure - Create the wheel rules
   community.general.ldap_entry:
@@ -65,8 +65,8 @@
       sudoCommand: ALL
       sudoRunAsUser: ALL
     # connection
-    bind_dn: cn=admin,{{ ldap_dn }}
-    bind_pw: "{{ ldap_admin_password }}"
+    bind_dn: cn={{ ldap_admin_user }},{{ ldap_dn }}
+    bind_pw: "{{ ldap_admin_pass }}"
 
 - name: LDAP | Configure - Create the rest of rules
   community.general.ldap_entry:
@@ -82,6 +82,6 @@
       sudoCommand: "{{ item.command|default(omit) }}"
       sudoRunAsUser: "{{ item.runas|default(omit) }}"
     # connection
-    bind_dn: cn=admin,{{ ldap_dn }}
-    bind_pw: "{{ ldap_admin_password }}"
+    bind_dn: cn={{ ldap_admin_user }},{{ ldap_dn }}
+    bind_pw: "{{ ldap_admin_pass }}"
   with_items: "{{ ldap_sudo_rules | selectattr('name', 'ne', '%sudoers') }}"

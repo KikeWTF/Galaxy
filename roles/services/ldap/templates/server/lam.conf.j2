@@ -1,5 +1,5 @@
 # --- | Server | ---
-serverDisplayName: {{ ldap_domain | split('.') | first | title }}
+serverDisplayName: {{ ldap_fqdn | split('.') | first | title }}
 ServerURL: ldapi:///
 useTLS: no
 
@@ -11,7 +11,7 @@ tools: treeViewSuffix: {{ ldap_dn }}
 # --- | Login | ---
 Passwd: lam
 loginMethod: list
-Admins: cn=admin,{{ ldap_dn }}
+Admins: cn={{ ldap_admin_user }},{{ ldap_dn }}
 loginSearchSuffix: {{ ldap_dn }}
 
 # --- | Objects | ---

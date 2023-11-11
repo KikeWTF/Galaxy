@@ -8,8 +8,8 @@
       ou: policies
       description: Policies organizational unit
     # connection
-    bind_dn: cn=admin,{{ ldap_dn }}
-    bind_pw: "{{ ldap_admin_password }}"
+    bind_dn: cn={{ ldap_admin_user }},{{ ldap_dn }}
+    bind_pw: "{{ ldap_admin_pass }}"
 
 - name: LDAP | Configure - Activate password policies module
   community.general.ldap_attrs:
@@ -53,5 +53,5 @@
       pwdAllowUserChange: "TRUE"
       pwdSafeModify: "TRUE"
     # connection
-    bind_dn: cn=admin,{{ ldap_dn }}
-    bind_pw: "{{ ldap_admin_password }}"
+    bind_dn: cn={{ ldap_admin_user }},{{ ldap_dn }}
+    bind_pw: "{{ ldap_admin_pass }}"

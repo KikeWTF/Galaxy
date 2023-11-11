@@ -3,8 +3,8 @@ BASE    {{ ldap_dn }}
 URI     ldapi:///
 
 # --- | User | ---
-BINDDN  cn=proxy,ou=system,{{ ldap_dn }}
-BINDPW  {{ ldap_proxy_password_hash.stdout | default(ldap_proxy_password) }}
+BINDDN  cn={{ ldap_proxy_user }},ou=system,{{ ldap_dn }}
+BINDPW  {{ ldap_proxy_pass_hash.stdout | default(ldap_proxy_pass) }}
 
 # --- | OUs | ---
 USER_BASE       ou=users,{{ ldap_dn }}

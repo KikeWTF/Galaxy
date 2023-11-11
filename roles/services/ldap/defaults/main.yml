@@ -1,21 +1,25 @@
 ---
 # --- | Server | ---
+ldap_fqdn: "ldap.{{ homelab_domain|default('home.lab') }}"
 ldap_server_ip: 192.168.1.2
-ldap_server_hostname: cerberus
-ldap_domain: "{{ homelab_domain|default('home.lab') }}"
 # --- | Schema | ---
-ldap_dn: "{{ 'o' if ldap_domain | split('.') | count > 2 else 'dc' }}={{ ldap_domain | split('.') | join(',dc=') }}"
+ldap_dn: "{{ 'o' if ldap_fqdn | split('.') | count > 3 else 'dc' }}={{ (ldap_fqdn | split('.'))[1:] | join(',dc=') }}"
 ldap_minid: 10000
 ldap_maxid: 30000
+# --- | Admin user | ---
+ldap_admin_user: admin
+ldap_admin_pass: ldapadmin{{ ldap_fqdn | split('.') | first }}
+# --- | Read-only user | ---
+ldap_proxy_user: proxy
+ldap_proxy_pass: readonly
 # --- | Users | ---
 ldap_default_group: users
+ldap_default_pass: changeme
 ldap_users: []
+# --- | Sufo | ---
 ldap_sudo_rules: []
-# --- | Credentials | ---
-ldap_admin_password: ldapadmin{{ ldap_domain | split('.') | first }}
-ldap_default_password: changeme
-ldap_proxy_password: readonly
 # --- | Encryption | ---
 ldap_tls: true
 # --- | Utilities | ---
 ldap_lam: true
+ldap_utils: true

@@ -41,6 +41,7 @@
       block:
         - name: LDAP | Server - Install LDAP-Utils
           ansible.builtin.import_tasks: server/utils/client.yml
+          when: ldap_utils
         
         - name: LDAP | Server - Install LAM
           ansible.builtin.import_tasks: server/utils/lam.yml

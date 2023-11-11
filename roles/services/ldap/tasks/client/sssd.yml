@@ -26,7 +26,7 @@
 
 - name: LDAP | SSSD - Obfuscate the LDAP password
   ansible.builtin.shell: >
-    /bin/echo -n '{{ ldap_proxy_password }}' |
+    /bin/echo -n '{{ ldap_proxy_pass }}' |
     /usr/sbin/sss_obfuscate
     --stdin
     --domain authentication
@@ -35,7 +35,7 @@
   ansible.builtin.shell:
     cmd: >
       /usr/bin/openssl s_client
-      -connect '{{ [ldap_server_hostname,ldap_domain] | join(".") }}:636'
+      -connect '{{ ldap_fqdn }}:636'
       -showcerts </dev/null 2>/dev/null |
       openssl x509 -outform PEM > /etc/sssd/ldap.crt
     creates: /etc/sssd/ldap.crt

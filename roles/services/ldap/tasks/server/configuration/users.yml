@@ -9,21 +9,21 @@
       cn: "{{ item.surname | lower }}"
       uid: "{{ item.surname | lower }}"
       uidNumber: "{{ ldap_minid + idx }}"
-      gidNumber: "{{ ldap_minid + 1 if item.group|default(ldap_default_group) == ldap_default_group else (ldap_users | map(attribute='group') | unique).index(item.group) + ldap_minid + 2 }}"
+      gidNumber: "{{ ldap_minid + 1 if item.group|default(ldap_default_group) == ldap_default_group else (ldap_users | selectattr('group', 'defined') | map(attribute='group') | unique).index(item.group) + ldap_minid + 2 }}"
       gecos: "{{ item.name | title }} {{ item.surname | title }}"
       description: "{{ item.name | title }} {{ item.surname | title }}"
       homeDirectory: "{{ '/nonexistent' if item.system|default(false) else '/home/' + item.group|default(ldap_default_group) + '/' + item.surname | lower }}"
       loginShell: /bin/{{ 'sh' if item.system|default(false) else 'bash' }}
       # inetOrgPerson
       sn: "{{ item.surname | title }}"
-      userPassword: "{{ item.password }}"
+      userPassword: "{{ item.password |default(ldap_default_passw) }}"
       givenName: "{{ item.name|default(omit) | title }}"
       displayName: "{{ item.name|default('') | title }} {{ item.surname | title }}"
-      mail: "{{ item.group|default(ldap_default_group) | lower if item.system|default(false) else item.name|default(item.surname) | lower }}@{{ ldap_domain }}"
-      pwdReset: "{{ 'TRUE' if item.password == ldap_default_password else omit }}"
+      mail: "{{ item.group|default(ldap_default_group) | lower if item.system|default(false) else item.name|default(item.surname) | lower }}@{{ (ldap_fqdn | split ('.'))[1:] }}"
+      pwdReset: "{{ 'TRUE' if item.password|default(ldap_default_pass) == ldap_default_pass else omit }}"
     # connection
-    bind_dn: cn=admin,{{ ldap_dn }}
-    bind_pw: "{{ ldap_admin_password }}"
+    bind_dn: cn={{ ldap_admin_user }},{{ ldap_dn }}
+    bind_pw: "{{ ldap_admin_pass }}"
   with_items: "{{ ldap_users }}"
   loop_control:
     index_var: idx
@@ -39,8 +39,8 @@
       description: "{{ ldap_default_group | title }} group"
       memberUid: "{{ ldap_users | selectattr('group', 'undefined') | map(attribute='surname') | map('lower') }}"
     # connection
-    bind_dn: cn=admin,{{ ldap_dn }}
-    bind_pw: "{{ ldap_admin_password }}"
+    bind_dn: cn={{ ldap_admin_user }},{{ ldap_dn }}
+    bind_pw: "{{ ldap_admin_pass }}"
 
 - name: LDAP | Configure - The rest of groups
   community.general.ldap_entry:
@@ -53,8 +53,8 @@
       description: "{{ item | title }} users"
       memberUid: "{{ ldap_users | selectattr('group', 'defined') | selectattr('group', 'equalto', item) | map(attribute='surname') | map('lower') }}"
     # connection
-    bind_dn: cn=admin,{{ ldap_dn }}
-    bind_pw: "{{ ldap_admin_password }}"
-  with_items: "{{ ldap_users | map(attribute='group') | unique | map('lower') }}"
+    bind_dn: cn={{ ldap_admin_user }},{{ ldap_dn }}
+    bind_pw: "{{ ldap_admin_pass }}"
+  with_items: "{{ ldap_users | selectattr('group', 'defined') | map(attribute='group') | unique | map('lower') }}"
   loop_control:
     index_var: idx

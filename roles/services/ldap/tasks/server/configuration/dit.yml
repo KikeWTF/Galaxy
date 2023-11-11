@@ -5,11 +5,11 @@
     state: present
     objectClass: [top, dcObject, organization]
     attributes:
-      dc: "{{ (ldap_domain | split('.'))[1] if ldap_domain | split('.') | count > 2 else ldap_domain | split('.') | first  }}"
-      o: "{{ ldap_domain | split('.') | first }}"
+      dc: "{{ (ldap_fqdn | split('.'))[2] if ldap_fqdn | split('.') | count > 3 else (ldap_fqdn | split('.'))[1]  }}"
+      o: "{{ (ldap_fqdn | split('.'))[1] if ldap_fqdn | split('.') | count > 3 else omit }}"
     # connection
-    bind_dn: cn=admin,{{ ldap_dn }}
-    bind_pw: "{{ ldap_admin_password }}"
+    bind_dn: cn={{ ldap_admin_user }},{{ ldap_dn }}
+    bind_pw: "{{ ldap_admin_pass }}"
 
 - name: LDAP | Configure - Default OUs
   community.general.ldap_entry:
@@ -20,8 +20,8 @@
       ou: "{{ item }}"
       description: "{{ item | title }} organizational unit"
     # connection
-    bind_dn: cn=admin,{{ ldap_dn }}
-    bind_pw: "{{ ldap_admin_password }}"
+    bind_dn: cn={{ ldap_admin_user }},{{ ldap_dn }}
+    bind_pw: "{{ ldap_admin_pass }}"
   with_items:
     - users
     - groups

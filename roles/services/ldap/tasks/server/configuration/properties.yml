@@ -23,16 +23,16 @@
 
 - name: LDAP | Properties - Calculate the hash of the admin account
   ansible.builtin.shell: >
-    /usr/sbin/slappasswd -s '{{ ldap_admin_password }}'
-  register: ldap_admin_password_hash
+    /usr/sbin/slappasswd -s '{{ ldap_admin_pass }}'
+  register: ldap_admin_pass_hash
 
 - name: LDAP | Properties - Configure the server admin account
   community.general.ldap_attrs:
     dn: olcDatabase={1}mdb,cn=config
     state: exact
     attributes:
-      olcRootDN: cn=admin,{{ ldap_dn}}
-      olcRootPW: "{{ ldap_admin_password_hash.stdout }}"
+      olcRootDN: cn={{ ldap_admin_user }},{{ ldap_dn}}
+      olcRootPW: "{{ ldap_admin_pass_hash.stdout }}"
 
 - name: LDAP | Properties - Configure ACL
   community.general.ldap_attrs:
@@ -46,7 +46,7 @@
           by anonymous auth
         - >- # allow admin to manage, proxy to read, users to read their own entries and deny the rest
           {1}to *
-          by dn.base="cn=admin,{{ ldap_dn }}" manage
-          by dn.base="cn=proxy,ou=system,{{ ldap_dn }}" read
+          by dn.base="cn={{ ldap_admin_user }},{{ ldap_dn }}" manage
+          by dn.base="cn={{ ldap_proxy_user }},ou=system,{{ ldap_dn }}" read
           by self read
           by * none

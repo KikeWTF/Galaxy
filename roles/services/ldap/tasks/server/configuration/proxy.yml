@@ -8,22 +8,22 @@
       ou: system
       description: System organizational unit
     # connection
-    bind_dn: cn=admin,{{ ldap_dn }}
-    bind_pw: "{{ ldap_admin_password }}"
+    bind_dn: cn={{ ldap_admin_user }},{{ ldap_dn }}
+    bind_pw: "{{ ldap_admin_pass }}"
 
 - name: LDAP | Configure - Default Proxy Password
   ansible.builtin.shell: >
-    /usr/sbin/slappasswd -s '{{ ldap_proxy_password }}'
-  register: ldap_proxy_password_hash
+    /usr/sbin/slappasswd -s '{{ ldap_proxy_pass }}'
+  register: ldap_proxy_pass_hash
 
 - name: LDAP | Configure - Default Proxy User
   community.general.ldap_entry:
-    dn: cn=proxy,ou=system,{{ ldap_dn }}
+    dn: cn={{ ldap_proxy_user }},ou=system,{{ ldap_dn }}
     state: present
     objectClass: [simpleSecurityObject, organizationalRole]
     attributes:
       cn: proxy
-      userPassword: "{{ ldap_proxy_password_hash.stdout }}"
+      userPassword: "{{ ldap_proxy_pass_hash.stdout }}"
     # connection
-    bind_dn: cn=admin,{{ ldap_dn }}
-    bind_pw: "{{ ldap_admin_password }}"
+    bind_dn: cn={{ ldap_admin_user }},{{ ldap_dn }}
+    bind_pw: "{{ ldap_admin_pass }}"
