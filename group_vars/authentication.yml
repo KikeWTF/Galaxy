@@ -1,5 +1,6 @@
 ---
 # --- | LDAP | ---
+ldap_fqdn: cerberus.{{ homelab_domain }}
 ldap_users:
   - name: Service
     surname: Ansible

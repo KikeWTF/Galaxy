@@ -1,6 +1,6 @@
 ---
 # --- | Server | ---
-ldap_fqdn: "ldap.{{ homelab_domain|default('home.lab') }}"
+ldap_fqdn: ldap.home.lab
 ldap_server_ip: 192.168.1.2
 # --- | Schema | ---
 ldap_dn: "{{ 'o' if ldap_fqdn | split('.') | count > 3 else 'dc' }}={{ (ldap_fqdn | split('.'))[1:] | join(',dc=') }}"

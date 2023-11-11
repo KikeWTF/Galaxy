@@ -36,8 +36,8 @@ The following variables can be set to customize the LDAP configuration:
 
 | Side | Variable | Default | Description |
 | --- | --- | --- | --- |
-| Server | ldap_admin_pass | `ldapadminldap` | Password of the administrative user. |
-| Server | ldap_admin_pass | `admin` | Username of the administrative user. |
+| Server | ldap_admin_pass | `ldapadminldap` | Password of the administrative user (LAM also uses this password). |
+| Server | ldap_admin_user | `admin` | Username of the administrative user. |
 | Server | ldap_default_group | `users` | The default group to use for new users. |
 | Server | ldap_default_pass | `changeme` | The default password to use for new users. |
 | Both | ldap_dn | `dc=home,dc=lab` | The base DN for LDAP searches. |
@@ -281,7 +281,6 @@ Here's an example playbook that uses the LDAP role:
 ## ✅ TODOs
 
 - [ ] Improve LAM configuration template.
-- [ ] Create SSSD defaults configuration template.
 - [ ] Implement "automount" via LDAP.
 - [ ] Implement "hosts" via LDAP (maybe).
 - [ ] RedHat / CentOS / Fedora support.

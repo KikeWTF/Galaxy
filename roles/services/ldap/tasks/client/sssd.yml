@@ -7,7 +7,7 @@
     - libnss-sss
     - libpam-sss
     - libsss-sudo
-    - sssd        # TODO: Template /etc/default/sssd
+    - sssd
     - sssd-tools
     - sudo
 

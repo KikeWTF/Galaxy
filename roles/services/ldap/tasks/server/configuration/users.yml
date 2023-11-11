@@ -19,7 +19,7 @@
       userPassword: "{{ item.password |default(ldap_default_pass) }}"
       givenName: "{{ item.name|default(omit) | title }}"
       displayName: "{{ item.name|default('') | title }} {{ item.surname | title }}"
-      mail: "{{ item.group|default(ldap_default_group) | lower if item.system|default(false) else item.name|default(item.surname) | lower }}@{{ (ldap_fqdn | split ('.'))[1:] }}"
+      mail: "{{ item.group|default(ldap_default_group) | lower if item.system|default(false) else item.name|default(item.surname) | lower }}@{{ (ldap_fqdn | split ('.'))[1:] | join('.') }}"
       pwdReset: "{{ 'TRUE' if item.password|default(ldap_default_pass) == ldap_default_pass else omit }}"
     # connection
     bind_dn: cn={{ ldap_admin_user }},{{ ldap_dn }}
