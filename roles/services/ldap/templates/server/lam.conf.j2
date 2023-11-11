@@ -1,72 +1,80 @@
 # --- | Server | ---
+
 serverDisplayName: {{ ldap_fqdn | split('.') | first | title }}
 ServerURL: ldapi:///
 useTLS: no
 
 # --- | Localization | ---
+
 timeZone: Europe/Madrid
 defaultLanguage: en_US.utf8
-tools: treeViewSuffix: {{ ldap_dn }}
 
 # --- | Login | ---
-loginMethod: list
 
-# --- List
+# --- administrator
+accessLevel: 100
+Passwd: lam
+
+# --- login
+loginMethod: list
 Admins: cn={{ ldap_admin_user }},{{ ldap_dn }}
 
-# --- Search
-loginSearchFilter: uid=%USER%
-loginSearchDN: ou=users,{{ ldap_dn }}
-loginSearchPassword:
-
-# --- Admin
-Passwd: {{ ldap_admin_pass }}
-
 # --- | Search | ---
+
 loginSearchSuffix: {{ ldap_dn }}
+tools: treeViewSuffix: {{ ldap_dn }}
+searchLimit: 0
+pagedResults: false
 hideDnPart:
-pagedResults: true
-searchLimit: 10
 
 # --- | Objects | ---
+
 activeTypes: user,group
 
-types: customLabel_user: Users
+# --- users
 types: suffix_user: ou=users,{{ ldap_dn }}
+types: attr_user: #uid;#givenName;#sn;#uidNumber;#gidNumber
 types: modules_user: inetOrgPerson,posixAccount,shadowAccount
-types: attr_user: #uid;#gecos;#mail;#homeDirectory;#loginShell;#uidNumber;#gidNumber
-modules: posixAccount_pwdHash: SSHA
+types: customLabel_user:
 types: filter_user:
 types: hidden_user:
+modules: posixAccount_pwdHash: SSHA
 
-types: customLabel_group: Groups
+# --- groups
 types: suffix_group: ou=groups,{{ ldap_dn }}
+types: attr_group: #cn;#gidNumber;#memberUID;#description
 types: modules_group: posixGroup
-types: attr_group: #cn;#gidNumber;#description;#memberUID
-modules: posixGroup_pwdHash: SSHA
+types: customLabel_group:
 types: filter_group:
 types: hidden_group:
+modules: posixGroup_pwdHash: SSHA
 
 # --- | IDs | ---
+
+# --- users
 modules: posixAccount_user_minUID: {{ ldap_minid }}
 modules: posixAccount_user_maxUID: {{ ldap_maxid }}
 modules: posixAccount_user_uidGeneratorUsers: range
 
-modules: posixAccount_host_minMachine: {{ ldap_maxid + 1 }}
-modules: posixAccount_host_maxMachine: {{ ldap_maxid * 2 }}
-modules: posixAccount_host_uidGeneratorUsers: range
-
+# --- groups
 modules: posixGroup_group_minGID: {{ ldap_minid }}
 modules: posixGroup_group_maxGID: {{ ldap_maxid }}
 modules: posixAccount_group_gidGeneratorUsers: range
 
+# --- hosts
+modules: posixAccount_host_minMachine: {{ ldap_maxid + 1 }}
+modules: posixAccount_host_maxMachine: {{ ldap_maxid * 2 }}
+modules: posixAccount_host_uidGeneratorUsers: range
+
 # --- | Tools | ---
-# (enabled)
+
+# --- enabled
 tools: tool_hide_ImportExport: false
 tools: tool_hide_toolSchemaBrowser: false
 tools: tool_hide_toolServerInformation: false
 tools: tool_hide_TreeViewTool: false
-# (disabled)
+
+# --- disabled
 tools: tool_hide_toolFileUpload: true
 tools: tool_hide_toolMultiEdit: true
 tools: tool_hide_toolOUEditor: true
@@ -76,39 +84,54 @@ tools: tool_hide_toolTests: true
 tools: tool_hide_toolWebauthn: true
 
 # --- | Misc | ---
-# --- Other
-accessLevel: 100
 followReferrals: false
 referentialIntegrityOverlay: false
-hidePasswordPromptForExpiredPasswords: true
-# --- Scripts
+hidePasswordPromptForExpiredPasswords: false
+
+# --- basic auth
+httpAuthentication: false
+
+# --- password policy
+pwdPolicyMinLength:
+pwdPolicyMinLowercase:
+pwdPolicyMinUppercase:
+pwdPolicyMinNumeric:
+pwdPolicyMinSymbolic:
+
+# --- password reset
+pwdResetAllowSpecificPassword: true
+pwdResetAllowScreenPassword: true
+pwdResetForcePasswordChange: true
+pwdResetDefaultPasswordOutput: 2
+
+# --- script
 scriptPath:
 scriptServer:
 scriptRights: 750
 scriptUserName:
 scriptSSHKey:
 scriptSSHKeyPassword:
-# --- Basic Auth
-httpAuthentication: false
-# --- Mail
+
+# --- jobs
+jobsBindPassword:
+jobsBindUser:
+jobsDatabase: SQLite
+jobsDBHost:
+jobsDBPort:
+jobsDBUser:
+jobsDBPassword:
+jobsDBName:
+jobToken: VdXBI7sA1hLZNiKMPVPA
+
+# mail
 lamProMailFrom: noreply@{{ (ldap_fqdn | split('.'))[1:] | join('.') }}
 lamProMailReplyTo:
-lamProMailSubject: Your {{ (ldap_fqdn | split('.'))[1:] | join('.') }} password was reset
+lamProMailSubject: Your password was reset
 lamProMailIsHTML: false
 lamProMailAllowAlternateAddress: true
-lamProMailText: Dear @@sn@@,+::++::+your password was reset to: @@newPassword@@+::++::++::+Best regards,+::++::+{{ (ldap_fqdn | split('.'))[1:] | join('.') }} admin+::+
-# --- Password Policy
-pwdPolicyMinLength: 8
-pwdPolicyMinLowercase:
-pwdPolicyMinUppercase:
-pwdPolicyMinNumeric:
-pwdPolicyMinSymbolic:
-# --- Password Reset
-pwdResetAllowSpecificPassword: true
-pwdResetAllowScreenPassword: true
-pwdResetForcePasswordChange: true
-pwdResetDefaultPasswordOutput: 2
-# --- 2FA
+lamProMailText: Dear @@sn@@,+::++::+your password was reset to: @@newPassword@@+::++::++::+Best regards+::+
+
+# --- 2fa
 twoFactorAuthentication: none
 twoFactorAuthenticationURL: https://localhost
 twoFactorAuthenticationClientId:
@@ -122,13 +145,3 @@ twoFactorAuthenticationAttribute: uid
 twoFactorAllowToRememberDevice: false
 twoFactorRememberDeviceDuration: 28800
 twoFactorRememberDevicePassword: dqnCz3Np3s7iOlYfcx-bsFQ4vfak-l
-# --- Jobs
-jobsBindPassword:
-jobsBindUser:
-jobsDatabase: SQLite
-jobsDBHost:
-jobsDBPort:
-jobsDBUser:
-jobsDBPassword:
-jobsDBName:
-jobToken: VdXBI7sA1hLZNiKMPVPA
