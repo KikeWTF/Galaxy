@@ -219,9 +219,9 @@ objectClass: pwdPolicy
 
 </details>
 
-## 📒 Example Playbook
+## 📒 Example Playbooks
 
-Here's an example playbook that uses the LDAP role:
+Here are some example playbooks for this role:
 
 ```yaml
 # Install, configure and start the LDAP server with default values.
@@ -281,6 +281,6 @@ Here's an example playbook that uses the LDAP role:
 
 ## ✅ TODOs
 
-- [ ] Implement "automount" via LDAP.
-- [ ] Implement "hosts" via LDAP (maybe).
 - [ ] RedHat / CentOS / Fedora support.
+- [ ] Implement "hosts" via LDAP (maybe).
+- [ ] Implement "automount" via LDAP (maybe).
