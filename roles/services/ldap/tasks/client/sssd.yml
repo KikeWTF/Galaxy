@@ -45,7 +45,7 @@
   ansible.builtin.shell: >
     /usr/sbin/pam-auth-update
     --enable mkhomedir
-  when: ansible_os_family | lower == 'debian'
+  when: ansible_os_family | lower == 'debian'  # FIXME: RHEL/Fedora?
 
 - name: LDAP | SSSD - Restart the service
   ansible.builtin.service:

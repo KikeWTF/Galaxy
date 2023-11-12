@@ -283,4 +283,4 @@ Here are some example playbooks for this role:
 
 - [ ] RedHat / CentOS / Fedora support.
 - [ ] Implement "hosts" via LDAP (maybe).
-- [ ] Implement "automount" via LDAP (maybe).
+- [ ] Implement "autofs" via LDAP (maybe).

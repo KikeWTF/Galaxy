@@ -17,7 +17,7 @@ ldap_proxy_pass: readonly
 ldap_default_group: users
 ldap_default_pass: changeme
 ldap_users: []
-# --- | Sufo | ---
+# --- | Sudo | ---
 ldap_sudo_rules: []
 # --- | Encryption | ---
 ldap_tls: true

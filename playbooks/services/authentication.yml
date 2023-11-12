@@ -4,34 +4,34 @@
 
 - name: LDAP | Install and configure the services
   hosts: all
-  become: yes
+  become: true
   roles:
-    - { role: services/ldap, state: present }
-  tags: [ present, configure, configured ]
+    - {role: services/ldap, state: present}
+  tags: [present, configure, configured]
 
 # --- | Started | ---
 
 - name: LDAP | Install, configure and start the services
   hosts: all
-  become: yes
+  become: true
   roles:
-    - { role: services/ldap, state: started }
-  tags: [ start, started, install, installed ]
+    - {role: services/ldap, state: started}
+  tags: [start, started, install, installed]
 
 # --- | Stopped | ---
 
 - name: LDAP | Stop the services
   hosts: all
   roles:
-    - { role: services/ldap, state: stopped }
-  become: yes
-  tags: [ stop, stopped ]
+    - {role: services/ldap, state: stopped}
+  become: true
+  tags: [stop, stopped]
 
 # --- | Absent | ---
 
 - name: LDAP | Uninstall the services
   hosts: all
   roles:
-    - { role: services/ldap, state: absent }
-  become: yes
-  tags: [ absent, uninstall, uninstalled ]
+    - {role: services/ldap, state: absent}
+  become: true
+  tags: [absent, uninstall, uninstalled]

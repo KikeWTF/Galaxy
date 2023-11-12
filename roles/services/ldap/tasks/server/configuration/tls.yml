@@ -8,16 +8,16 @@
         mode: 0755
         owner: openldap
         group: openldap
-    
+
     - name: LDAP | TLS - Generate the private key
       community.crypto.openssl_privatekey:
         path: /etc/ldap/sasl2/ldap.key
         type: RSA
-        size: 4096 # 2048
+        size: 4096  # 2048
         mode: 0600
         owner: openldap
         group: openldap
-    
+
     - name: LDAP | TLS - Generate the certificate signing request
       community.crypto.openssl_csr:
         path: /etc/ldap/sasl2/ldap.csr
@@ -37,11 +37,11 @@
         privatekey_path: /etc/ldap/sasl2/ldap.key
         selfsigned_not_after: +14600d
         provider: selfsigned
-        force: yes
+        force: true
         mode: 0644
         owner: openldap
         group: openldap
-    
+
     - name: LDAP | TLS - Copy the CA certificate
       ansible.builtin.copy:
         src: /etc/ssl/certs/ca-certificates.crt

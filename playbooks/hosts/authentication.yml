@@ -4,34 +4,34 @@
 
 - name: Authentication | Install and configure the services
   hosts: authentication
-  become: yes
+  become: true
   roles:
-    - { role: services/ldap, state: present }
-  tags: [ present, configure, configured ]
+    - {role: services/ldap, state: present}
+  tags: [present, configure, configured]
 
 # --- | Started | ---
 
 - name: Authentication | Install, configure and start the services
   hosts: authentication
-  become: yes
+  become: true
   roles:
-    - { role: services/ldap, state: started }
-  tags: [ start, started, install, installed ]
+    - {role: services/ldap, state: started}
+  tags: [start, started, install, installed]
 
 # --- | Stopped | ---
 
 - name: Authentication | Stop the services
   hosts: authentication
   roles:
-    - { role: services/ldap, state: stopped }
-  become: yes
-  tags: [ stop, stopped ]
+    - {role: services/ldap, state: stopped}
+  become: true
+  tags: [stop, stopped]
 
 # --- | Absent | ---
 
 - name: Authentication | Uninstall the services
   hosts: authentication
   roles:
-    - { role: services/ldap, state: absent }
-  become: yes
-  tags: [ absent, uninstall, uninstalled ]
+    - {role: services/ldap, state: absent}
+  become: true
+  tags: [absent, uninstall, uninstalled]

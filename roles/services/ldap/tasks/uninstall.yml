@@ -19,10 +19,10 @@
   ansible.builtin.apt:
     name: "{{ ldap_uninstall_packages }}"
     state: absent
-    purge: yes
-    clean: yes
-    autoremove: yes
-  when: ansible_os_family | lower == 'debian'    
+    purge: true
+    clean: true
+    autoremove: true
+  when: ansible_os_family | lower == 'debian'
 
 - name: LDAP | Uninstall - Remove service files and directories
   ansible.builtin.file:

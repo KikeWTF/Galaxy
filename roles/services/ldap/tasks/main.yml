@@ -13,25 +13,25 @@
       block:
         - name: LDAP | Server - Clean the database
           ansible.builtin.import_tasks: server/configuration/clean.yml
-        
-        - name: LDAP | Server - Configure the properties 
+
+        - name: LDAP | Server - Configure the properties
           ansible.builtin.import_tasks: server/configuration/properties.yml
-    
+
         - name: LDAP | Server - Configure the DIT
           ansible.builtin.import_tasks: server/configuration/dit.yml
-        
+
         - name: LDAP | Server - Configure the policies
           ansible.builtin.import_tasks: server/configuration/policies.yml
-        
+
         - name: LDAP | Server - Configure the proxy
           ansible.builtin.import_tasks: server/configuration/proxy.yml
-        
+
         - name: LDAP | Server - Configure the users
           ansible.builtin.import_tasks: server/configuration/users.yml
-        
+
         - name: LDAP | Server - Configure the sudo rules
           ansible.builtin.import_tasks: server/configuration/sudo.yml
-        
+
         - name: LDAP | Server - Configure the TLS connection
           ansible.builtin.import_tasks: server/configuration/tls.yml
           when: ldap_tls
@@ -42,11 +42,11 @@
         - name: LDAP | Server - Install LDAP-Utils
           ansible.builtin.import_tasks: server/utils/client.yml
           when: ldap_utils
-        
+
         - name: LDAP | Server - Install LAM
           ansible.builtin.import_tasks: server/utils/lam.yml
           when: ldap_lam
-    
+
     - name: LDAP | Start/Stop the services
       when: state|default('started') in ['started', 'stopped']
       ansible.builtin.import_tasks: server/status.yml
@@ -58,7 +58,7 @@
     - name: LDAP | Client - Install the SSSD client
       when: state in ['present', 'configured', 'started']
       ansible.builtin.import_tasks: client/sssd.yml
-    
+
     - name: LDAP | Start/Stop the service
       when: state in ['started', 'stopped']
       ansible.builtin.import_tasks: client/status.yml

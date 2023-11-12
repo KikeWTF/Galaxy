@@ -12,7 +12,7 @@
     dn: cn=config
     state: exact
     attributes:
-      olcLogLevel: stats # log connections/operations/results
+      olcLogLevel: stats  # log connections/operations/results
 
 - name: LDAP | Properties - Disable anonymous access
   community.general.ldap_attrs:

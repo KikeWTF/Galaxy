@@ -4,7 +4,7 @@
     name: slapd
     state: "{{ ldap_status }}"
     enabled: "{{ ldap_status == 'started' }}"
-  
+
 - name: LDAP | Status - Control LAM service
   ansible.builtin.service:
     name: apache2
