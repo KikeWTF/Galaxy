@@ -1,18 +1,17 @@
 # --- | Collection | ---
 
-namespace: kikewtf
+namespace: cosasdepuma
 name: homelab
 description: My own ready-to-use homelab galaxy
 version: 0.0.1
 homepage: https://lab.kike.wtf/
-authors: [ Kike Fontan <homelab@kike.wtf> ]
-tags: [ homelab, self-hosted, kikewtf, lab ]
+authors: [ Kike Fontan <@cosasdepuma> ]
+tags: [ cosasdepuma, kikewtf, lab, homelab, selfhosted, galaxy ]
 
 # --- | Repository | ---
 
 readme: README.md
 license_file: LICENSE
-license: [ GPL-3.0-or-later ]
 repository: https://github.com/kikewtf/galaxy
 documentation: https://github.com/kikewtf/galaxy/blob/main/README.md
 issues: https://github.com/kikewtf/galaxy/issues
@@ -21,6 +20,15 @@ issues: https://github.com/kikewtf/galaxy/issues
 
 dependencies: {}
 build_ignore:
+  # dev
   - /**/.env
+  - /**/.old
+  - /**/.vscode
+  # git
   - /**/.git
   - /**/.github
+  - /**/.gitignore
+  # ansible
+  - /**/*.tar.gz
+  - /**/group_vars
+  - /**/inventory.toml

@@ -2,8 +2,8 @@
 
 # --- | Present / Configured | ---
 
-- name: Authentication | Install and configure the services
-  hosts: authentication
+- name: LDAP | Install and configure the services
+  hosts: all
   become: yes
   roles:
     - { role: services/ldap, state: present }
@@ -11,8 +11,8 @@
 
 # --- | Started | ---
 
-- name: Authentication | Install, configure and start the services
-  hosts: authentication
+- name: LDAP | Install, configure and start the services
+  hosts: all
   become: yes
   roles:
     - { role: services/ldap, state: started }
@@ -20,8 +20,8 @@
 
 # --- | Stopped | ---
 
-- name: Authentication | Stop the services
-  hosts: authentication
+- name: LDAP | Stop the services
+  hosts: all
   roles:
     - { role: services/ldap, state: stopped }
   become: yes
@@ -29,8 +29,8 @@
 
 # --- | Absent | ---
 
-- name: Authentication | Uninstall the services
-  hosts: authentication
+- name: LDAP | Uninstall the services
+  hosts: all
   roles:
     - { role: services/ldap, state: absent }
   become: yes
