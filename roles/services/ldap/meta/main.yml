@@ -1,6 +1,8 @@
 galaxy_info:
   min_ansible_version: 2.15.5
   # --- | Metadata | ---
+  namespace: kikewtf
+  role_name: ldap
   author: Kike Fontán (@cosasdepuma)
   description: |
     [OpenLDAP](https://www.openldap.org/) and [SSSD](https://sssd.io/) management and installation.
@@ -8,4 +10,8 @@ galaxy_info:
   # --- | Repository | ---
   license: GPL-3.0-or-later
   issue_tracker_url: https://github.com/kikewtf/galaxy/issues
+  # --- | Platforms | ---
+  platforms:
+    - name: Debian
+      versions: [bookworm]
 dependencies: []

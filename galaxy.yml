@@ -3,7 +3,7 @@
 namespace: kikewtf
 name: homelab
 description: My own ready-to-use homelab galaxy
-version: 1.0.0
+version: 0.0.1
 homepage: https://lab.kike.wtf/
 authors: [ Kike Fontan <homelab@kike.wtf> ]
 tags: [ homelab, self-hosted, kikewtf, lab ]
