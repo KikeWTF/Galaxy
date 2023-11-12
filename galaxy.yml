@@ -21,14 +21,14 @@ issues: https://github.com/kikewtf/galaxy/issues
 dependencies: {}
 build_ignore:
   # dev
-  - /**/.env
-  - /**/.old
-  - /**/.vscode
+  - .env
+  - .old
+  - .vscode
   # git
-  - /**/.git
-  - /**/.github
-  - /**/.gitignore
+  - .git
+  - .github
+  - .gitignore
   # ansible
-  - /**/*.tar.gz
-  - /**/group_vars
-  - /**/inventory.toml
+  - .tar.gz
+  - group_vars
+  - inventory.toml
