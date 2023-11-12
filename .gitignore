@@ -1,3 +1,7 @@
 # Ansible
 /**/vars/
 /**/*.tar.gz
+
+# Development
+/**/.env
+/**/*.old

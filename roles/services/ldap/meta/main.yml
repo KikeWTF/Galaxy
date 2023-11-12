@@ -1,12 +1,12 @@
 galaxy_info:
   min_ansible_version: 2.15.5
   # --- | Metadata | ---
-  namespace: kikewtf
+  namespace: cosasdepuma
   role_name: ldap
-  author: Kike Fontán (@cosasdepuma)
+  author: Kike Fontan <@cosasdepuma>
   description: |
-    [OpenLDAP](https://www.openldap.org/) and [SSSD](https://sssd.io/) management and installation.
-  galaxy_tags: [homelab, self-hosted, authentication, lam, ldap, ldap-utils, openldap, sssd, sudo]
+    OpenLDAP and SSSD management and installation. Features: LAM, TLS, Sudo, NSS and Password Policies.
+  galaxy_tags: [cosasdepuma, kikewtf, homelab, lab, selfhosted, authentication, lam, ldap, ldap-utils, openldap, sssd, sudo]
   # --- | Repository | ---
   license: GPL-3.0-or-later
   issue_tracker_url: https://github.com/kikewtf/galaxy/issues
