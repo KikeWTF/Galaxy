@@ -4,7 +4,7 @@
 namespace: cosasdepuma
 name: homelab
 description: My own ready-to-use homelab galaxy
-version: 0.0.1
+version: 0.0.2
 homepage: https://lab.kike.wtf/
 authors: [Kike Fontan <@cosasdepuma>]
 tags: [cosasdepuma, kikewtf, lab, homelab, selfhosted, galaxy]
