@@ -7,6 +7,7 @@
     - libnss-sss
     - libpam-sss
     - libsss-sudo
+    - openssl
     - sssd
     - sssd-tools
     - sudo

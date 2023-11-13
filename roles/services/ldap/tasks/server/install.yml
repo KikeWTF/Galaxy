@@ -5,6 +5,7 @@
     state: latest
   with_items:
     - ldap-utils
+    - openssl
     - slapd
 
 - name: LDAP | Install - Ensure that the service is started and enabled

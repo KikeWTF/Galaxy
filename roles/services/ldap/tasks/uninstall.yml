@@ -3,6 +3,7 @@
   ansible.builtin.set_fact:
     ldap_uninstall_packages:
       # ansible (management)
+      - python3-cryptography
       - python3-ldap
       # ldap / slapd (server)
       - ldap-account-manager
