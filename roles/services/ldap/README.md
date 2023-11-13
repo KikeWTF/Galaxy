@@ -2,6 +2,8 @@
 
 This role installs and configures [OpenLDAP](https://www.openldap.org/) on the server and [SSSD](https://sssd.io/) on any host. It can be used to set up centralized LDAP authentication and authorization for users and groups.
 
+> 🚨 Multiple LDAP servers are not supported. This role is designed to be used with a single LDAP server.
+
 ## 📚 Table of Contents
 
 - [Requirements](#-requirements)

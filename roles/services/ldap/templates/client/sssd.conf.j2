@@ -8,6 +8,9 @@ services = nss, pam, sudo
 # --- | NSS | ---
 
 [nss]
+shell_fallback = /bin/sh
+fallback_homedir = /home/ldap/%u
+filter_users = _apt,avahi,backup,bin,_chrony,daemon,games,irc,list,lp,mail,man,messagebus,news,nobody,openldap,polkitd,postfix,proxy,root,sshd,sssd,sync,sys,systemd-network,systemd-timesync,tcpdump,usbmux,uucp,www-data
 
 # --- | PAM | ---
 
