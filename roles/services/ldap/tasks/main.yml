@@ -4,6 +4,10 @@
     - ansible_os_family | lower == 'debian'
     - ldap_server_ip == ansible_default_ipv4.address
   block:
+    - name: LDAP | Server - Install the prerequisites
+      when: state is not defined or state in ['present', 'configured', 'started']
+      ansible.builtin.import_tasks: server/prerequisites.yml
+
     - name: LDAP | Server - Install the service
       when: state is not defined or state in ['present', 'configured', 'started']
       ansible.builtin.import_tasks: server/install.yml
@@ -11,9 +15,6 @@
     - name: LDAP | Server - Configure the service
       when: state is not defined or state in ['present', 'configured', 'started']
       block:
-        - name: LDAP | Server - Clean the database
-          ansible.builtin.import_tasks: server/configuration/clean.yml
-
         - name: LDAP | Server - Configure the properties
           ansible.builtin.import_tasks: server/configuration/properties.yml
 

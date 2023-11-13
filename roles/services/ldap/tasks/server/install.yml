@@ -4,7 +4,6 @@
     name: "{{ item }}"
     state: latest
   with_items:
-    - python3-ldap
     - ldap-utils
     - slapd
 
