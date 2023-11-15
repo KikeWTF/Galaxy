@@ -1,0 +1,10 @@
+---
+- name: LXC | Download - Update the repository
+  ansible.builtin.shell: >
+    /usr/bin/pveam update
+
+- name: LXC | Download - Download the latest templates
+  ansible.builtin.shell: >
+    /usr/bin/pveam download '{{ proxmox_storage }}' '{{ item }}'
+  with_items:
+    - "{{ proxmox_containers | selectattr('distro', 'defined') | map(attribute='distro') | list }}"

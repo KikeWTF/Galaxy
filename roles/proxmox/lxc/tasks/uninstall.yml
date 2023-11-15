@@ -1,0 +1,23 @@
+---
+- name: LXC | Uninstall - Stop the containers
+  community.general.proxmox:
+    vmid: "{{ item.vmid|default( item.ipv4.split('.')[-1] | int + proxmox_container_minid ) }}"
+    state: stopped
+    force: true
+    # connection
+    api_host: "{{ ansible_host }}"
+    api_user: "{{ proxmox_admin_user }}"
+    api_password: "{{ proxmox_admin_pass }}"
+  with_items: "{{ proxmox_containers }}"
+
+- name: LXC | Uninstall - Remove the containers
+  community.general.proxmox:
+    vmid: "{{ item.vmid|default( item.ipv4.split('.')[-1] | int + proxmox_container_minid ) }}"
+    state: absent
+    force: true
+    purge: true
+    # connection
+    api_host: "{{ ansible_host }}"
+    api_user: "{{ proxmox_admin_user }}"
+    api_password: "{{ proxmox_admin_pass }}"
+  with_items: "{{ proxmox_containers }}"  

@@ -1,0 +1,14 @@
+---
+proxmox_admin_user: "{{ ansible_user }}@pam"
+proxmox_admin_pass: "{{ ansible_password }}"
+proxmox_container_minid: 1000
+proxmox_container_storage: local-lvm
+proxmox_containers: []
+proxmox_default_cores: 1
+proxmox_default_disk: 8
+proxmox_default_memory: 512
+proxmox_default_dns: 192.168.1.1
+proxmox_default_searchdomain: lab
+proxmox_default_password: "{{ proxmox_admin_pass }}"
+proxmox_storage: local
+proxmox_timezone: Europe/Madrid

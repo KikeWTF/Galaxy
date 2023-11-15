@@ -1,0 +1,19 @@
+---
+# --- | General | ---
+proxmox_default_searchdomain: "{{ homelab_domain }}"
+
+# --- | Proxmox: LXC | ---
+proxmox_containers:
+  - name: loki.{{ homelab_domain }}
+    description: "Loki - OpenLDAP Server"
+    ipv4: 192.168.1.2
+    memory: 512
+    distro: debian-12-standard_12.2-1_amd64.tar.zst
+    tags: [debian,ldap,management]
+
+  - name: spiderman.{{ homelab_domain }}
+    description: "Spiderman - Caido Server"
+    ipv4: 192.168.1.5
+    memory: 512
+    distro: debian-12-standard_12.2-1_amd64.tar.zst
+    tags: [debian,caido,hacking]

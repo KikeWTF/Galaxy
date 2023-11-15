@@ -1,0 +1,19 @@
+---
+- name: LXC | Only run in Proxmox
+  when: ansible_kernel.endswith('pve')
+  block:
+    - name: LXC | Create the containers
+      when: state is not defined or state in ['present', 'configured', 'started']
+      block:
+        - ansible.builtin.import_tasks: download.yml
+        - ansible.builtin.import_tasks: create.yml
+
+    - name: LXC | Start/Stop the containers
+      when: state|default('started') in ['started', 'stopped']
+      ansible.builtin.import_tasks: status.yml
+      vars:
+        proxmox_status: "{{ state }}"
+    
+    - name: LXC | Remove the containers
+      when: state == 'absent'
+      ansible.builtin.import_tasks: uninstall.yml

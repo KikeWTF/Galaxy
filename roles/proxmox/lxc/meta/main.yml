@@ -1,0 +1,18 @@
+---
+galaxy_info:
+  min_ansible_version: 2.15.5
+  # --- | Metadata | ---
+  namespace: cosasdepuma
+  role_name: lxc
+  author: Kike Fontan <@cosasdepuma>
+  description: |
+    LXC Container Management for Proxmox Virtual Environment.
+  galaxy_tags: [cosasdepuma, kikewtf, homelab, lab, selfhosted, container, proxmox, pve, lxc, template]
+  # --- | Repository | ---
+  license: GPL-3.0-or-later
+  issue_tracker_url: https://github.com/kikewtf/galaxy/issues
+  # --- | Platforms | ---
+  platforms:
+    - name: Debian
+      versions: [bookworm]
+dependencies: []

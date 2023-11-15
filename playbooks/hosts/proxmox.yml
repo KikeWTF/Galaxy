@@ -1,0 +1,37 @@
+---
+
+# --- | Present / Configured | ---
+
+- name: Proxmox | Install and configure the services
+  hosts: proxmox
+  become: true
+  roles:
+    - {role: proxmox/lxc, state: present}
+  tags: [present, configure, configured]
+
+# --- | Started | ---
+
+- name: Proxmox | Install, configure and start the services
+  hosts: proxmox
+  become: true
+  roles:
+    - {role: proxmox/lxc, state: started}
+  tags: [start, started, install, installed]
+
+# --- | Stopped | ---
+
+- name: Proxmox | Stop the services
+  hosts: proxmox
+  roles:
+    - {role: proxmox/lxc, state: stopped}
+  become: true
+  tags: [stop, stopped]
+
+# --- | Absent | ---
+
+- name: Proxmox | Uninstall the services
+  hosts: proxmox
+  roles:
+    - {role: proxmox/lxc, state: absent}
+  become: true
+  tags: [absent, uninstall, uninstalled]

@@ -1,0 +1,30 @@
+---
+- name: LXC - Create the containers
+  community.general.proxmox:
+    state: present
+    # metadata
+    vmid: "{{ item.vmid|default( item.ipv4.split('.')[-1] | int + proxmox_container_minid ) }}"
+    description: "{{ item.description|default(item.name) }}"
+    ostemplate: "{{ proxmox_storage }}:vztmpl/{{ item.distro }}"
+    password: "{{ item.password|default(proxmox_default_password) }}"
+    pubkey: "{{ item.pubkey|default(lookup('file', '~/.ssh/id_rsa.pub'))|default(omit) }}"
+    # specs
+    cores: "{{ item.cores|default(proxmox_default_cores) }}"
+    disk: "{{ item.disk|default(proxmox_default_disk) }}"
+    hostname: "{{ item.name }}"
+    memory: "{{ item.memory|default(proxmox_default_memory) | int }}"
+    nameserver: "{{ item.nameserver|default(proxmox_default_dns) }}"
+    searchdomain: "{{ item.searchdomain|default(proxmox_default_searchdomain) }}"
+    netif:
+      net0: name=eth0,bridge=vmbr0,gw={{ item.ipv4.split('.')[0:3] | join('.') }}.1,ip={{ item.ipv4 }}/24
+    # options
+    onboot: "{{ item.onboot|default(true) }}"
+    storage: "{{ item.storage|default(proxmox_container_storage) }}"
+    tags: "{{ item.tags|default([item.distro.split('-')[0] | lower]) }}"
+    timezone: "{{ proxmox_timezone }}"
+    # connection
+    api_host: "{{ ansible_host }}"
+    api_user: "{{ proxmox_admin_user }}"
+    api_password: "{{ proxmox_admin_pass }}"
+    node: "{{ ansible_hostname }}"
+  with_items: "{{ proxmox_containers }}"
