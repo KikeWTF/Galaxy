@@ -30,6 +30,8 @@ The following is a list of available Ansible roles for my own self-hosted Homela
 
 ## 🗃️ Ansible Roles Documentation
 
+---
+
 > 📝 The documentation for each role is automatically generated from the `README.md` file in each role's directory.
 
 > ⚠️ The tested platforms for each role are listed in the [`meta/main.yml`](./meta/main.yml) file. However, the roles may work on other platforms as well.
@@ -40,10 +42,16 @@ The following is a list of available Ansible roles for my own self-hosted Homela
 
 ✏️ **Details**: This role downloads, creates and manages [LXC](https://linuxcontainers.org/lxc/) containers on [Proxmox](https://www.proxmox.com/) hosts.
 
+---
+
 📁 **Role**: [services/caido](./roles/services/caido)
 
 ✏️ **Details**: This role downloads, installs and manage [Caido](https://caido.io/), a lightweight web security auditing toolkit.
 
+---
+
 📁 **Role**: [services/ldap](./roles/services/ldap/)
 
 ✏️ **Details**: This role installs and configures [OpenLDAP](https://www.openldap.org/) on the server and [SSSD](https://sssd.io/) on any host. It can be used to set up centralized LDAP authentication and authorization for users and groups.
+
+---
