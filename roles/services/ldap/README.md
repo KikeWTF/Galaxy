@@ -17,7 +17,7 @@ This role installs and configures [OpenLDAP](https://www.openldap.org/) on the s
 
 ## 💚 Requirements
 
-- Ansible 2.9 or later.
+- Ansible 2.15.5 or later.
 - A target host running a supported operating system (see [`meta/main.yml`](./meta/main.yml) for a list of supported platforms).
 
 ## 🏷️ States
@@ -181,7 +181,7 @@ ldap_users:
     sudo: true
 ```
 
-## 📃 Password Policies
+### 📃 Password Policies
 
 The LDAP server is configured to force passwords to be at least 8 characters long and a bit complex. The password policies can be found under `ou=policies` on the LDAP server.
 
