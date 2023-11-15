@@ -20,4 +20,4 @@
     api_host: "{{ ansible_host }}"
     api_user: "{{ proxmox_admin_user }}"
     api_password: "{{ proxmox_admin_pass }}"
-  with_items: "{{ proxmox_containers }}"  
+  with_items: "{{ proxmox_containers }}"

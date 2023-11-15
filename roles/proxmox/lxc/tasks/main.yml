@@ -13,7 +13,7 @@
       ansible.builtin.import_tasks: status.yml
       vars:
         proxmox_status: "{{ state }}"
-    
+
     - name: LXC | Remove the containers
       when: state == 'absent'
       ansible.builtin.import_tasks: uninstall.yml

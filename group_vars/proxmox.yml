@@ -9,11 +9,11 @@ proxmox_containers:
     ipv4: 192.168.1.2
     memory: 512
     distro: debian-12-standard_12.2-1_amd64.tar.zst
-    tags: [debian,ldap,management]
+    tags: [debian, ldap, management]
 
   - name: spiderman.{{ homelab_domain }}
     description: "Spiderman - Caido Server"
     ipv4: 192.168.1.5
     memory: 512
     distro: debian-12-standard_12.2-1_amd64.tar.zst
-    tags: [debian,caido,hacking]
+    tags: [debian, caido, hacking]
