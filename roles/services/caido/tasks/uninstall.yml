@@ -1,0 +1,9 @@
+---
+- name: Caido | Uninstall - Remove the Caido files
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: absent
+  loop:
+    - /home/caido
+    - /usr/local/bin/caido
+    - /etc/systemd/system/caido.service

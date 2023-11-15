@@ -1,0 +1,33 @@
+---
+- name: Caido | Download - Read the API to get the latest version
+  ansible.builtin.uri:
+    url: https://api.caido.io/releases/latest
+    return_content: true
+    status_code: 200
+    body_format: json
+  register: caido_releases
+
+- name: Caido | Download - Filter the latest version
+  ansible.builtin.set_fact:
+    caido_latest: "{{ caido_releases.json.links | selectattr('display', 'equalto', 'Linux') | map(attribute='link') | first }}"
+  failed_when: caido_latest is not defined or caido_latest | length == 0
+
+- name: Caido | Download - Download the latest version
+  ansible.builtin.get_url:
+    url: "{{ caido_latest }}"
+    dest: /tmp/caido.tar.gz
+    mode: 0400
+
+- name: Caido | Download - Unzip the package
+  ansible.builtin.unarchive:
+    src: /tmp/caido.tar.gz
+    dest: /usr/local/bin/
+    remote_src: true
+    owner: caido
+    group: caido
+    mode: 0700
+
+- name: Caido | Download - Remove the temporary file
+  ansible.builtin.file:
+    path: /tmp/caido.tar.gz
+    state: absent

@@ -1,0 +1,17 @@
+---
+- name: Caido | Install the service
+  when: state is not defined or state in ['present','configured','started']
+  block:
+    - ansible.builtin.import_tasks: users.yml
+    - ansible.builtin.import_tasks: download.yml
+    - ansible.builtin.import_tasks: service.yml
+
+- name: Caido | Start/Stop the service
+  ansible.builtin.import_tasks: status.yml
+  when: state|default('started') in ['started','stopped','absent']
+  vars:
+    caido_status: "{{ 'stopped' if state|default('started') == 'absent' else state|default('started') }}"
+
+- name: Caido | Uninstall the service
+  when: state == 'absent'
+  ansible.builtin.import_tasks: uninstall.yml

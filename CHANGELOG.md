@@ -2,5 +2,6 @@
 
 - 🎉 Galaxy: First release
 - 🎉 Role: `proxmox.lxc` release
+- 🎉 Role: `services.caido` release
 - 🎉 Role: `services.ldap` release
 - 💄 YAML linting

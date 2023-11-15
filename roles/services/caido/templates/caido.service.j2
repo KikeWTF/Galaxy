@@ -1,0 +1,15 @@
+[Unit]
+Description=Caido is a lightweight web security auditing toolkit.
+After=network.target
+
+[Service]
+Type=simple
+User=caido
+Group=caido
+ExecStart=/usr/local/bin/caido --listen {{ ansible_default_ipv4.address }}:{{ caido_port }}
+Restart=on-failure
+StartLimitBurst=3
+StartLimitIntervalSec=60
+
+[Install]
+WantedBy=multi-user.target

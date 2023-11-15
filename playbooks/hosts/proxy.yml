@@ -1,0 +1,37 @@
+---
+
+# --- | Present / Configured | ---
+
+- name: Spiderman | Install and configure the service
+  hosts: proxy
+  become: true
+  roles:
+    - {role: services/caido, state: present}
+  tags: [present, configure, configured]
+
+# --- | Started | ---
+
+- name: Spiderman | Install, configure and start the service
+  hosts: proxy
+  become: true
+  roles:
+    - {role: services/caido, state: started}
+  tags: [start, started, install, installed]
+
+# --- | Stopped | ---
+
+- name: Spiderman | Stop the service
+  hosts: proxy
+  roles:
+    - {role: services/caido, state: stopped}
+  become: true
+  tags: [stop, stopped]
+
+# --- | Absent | ---
+
+- name: Spiderman | Uninstall the service
+  hosts: proxy
+  roles:
+    - {role: services/caido, state: absent}
+  become: true
+  tags: [absent, uninstall, uninstalled]

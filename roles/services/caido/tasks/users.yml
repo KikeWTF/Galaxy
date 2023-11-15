@@ -1,0 +1,15 @@
+---
+- name: Caido | Users - Create the group
+  ansible.builtin.group:
+    name: caido
+    system: true
+    state: present
+
+- name: Caido | Users - Create the user
+  ansible.builtin.user:
+    name: caido
+    group: caido
+    system: true
+    createhome: true
+    home: /home/caido
+    state: present
