@@ -1,4 +1,4 @@
-# 👥 LDAP Role
+# 📦 Proxmox LXC Role
 
 This role downloads, creates and manages [LXC](https://linuxcontainers.org/lxc/) containers on [Proxmox](https://www.proxmox.com/) hosts.
 
