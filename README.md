@@ -34,8 +34,30 @@ The following is a list of available Ansible roles for my own self-hosted Homela
 
 > ⚠️ The tested platforms for each role are listed in the [`meta/main.yml`](./meta/main.yml) file. However, the roles may work on other platforms as well.
 
-| 📁 **Role** | ✏️ **Details** |
-| --- | --- |
-| [proxmox/lxc](./roles/proxmox/lxc/) | This role downloads, creates and manages [LXC](https://linuxcontainers.org/lxc/) containers on [Proxmox](https://www.proxmox.com/) hosts. |
-| [services/caido](./roles/services/caido) | This role downloads, installs and manage [Caido](https://caido.io/), a lightweight web security auditing toolkit. |
-| [services/ldap](./roles/services/ldap/) | This role installs and configures [OpenLDAP](https://www.openldap.org/) on the server and [SSSD](https://sssd.io/) on any host. It can be used to set up centralized LDAP authentication and authorization for users and groups. |
+### 🤖 Proxmox
+
+<details><summary>
+    📁 <a href="./roles/proxmox/lxc/"><b>proxmox/lxc</b></a>
+</summary>
+
+This role downloads, creates and manages [LXC](https://linuxcontainers.org/lxc/) containers on [Proxmox](https://www.proxmox.com/) hosts.
+
+</details>
+
+### 🧑🏽‍🔧 Services
+
+<details><summary>
+    📁 <a href="./roles/services/caido/"><b>services/caido</b></a>
+</summary>
+
+This role downloads, installs and manage [Caido](https://caido.io/), a lightweight web security auditing toolkit.
+
+</details>
+
+<details><summary>
+    📁 <a href="./roles/services/ldap/"><b>services/ldap</b></a>
+</summary>
+
+This role installs and configures [OpenLDAP](https://www.openldap.org/) on the server and [SSSD](https://sssd.io/) on any host. It can be used to set up centralized LDAP authentication and authorization for users and groups.
+
+</details>
