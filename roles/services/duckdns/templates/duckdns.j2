@@ -1,0 +1,2 @@
+#!/bin/sh
+/usr/bin/curl -k -o /etc/duckdns/duck.log 'https://www.duckdns.org/update?domains={{ duckdns_domains | join(',') }}&token={{ duckdns_token }}&ip='

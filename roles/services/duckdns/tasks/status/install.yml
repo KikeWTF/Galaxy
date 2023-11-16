@@ -1,0 +1,22 @@
+---
+- name: DuckDNS | Install - Create the directory
+  ansible.builtin.file:
+    path: /etc/duckdns
+    state: directory
+    owner: duckdns
+    group: duckdns
+    mode: 0755
+
+- name: DuckDNS | Install - Create the script
+  ansible.builtin.template:
+    src: duckdns.j2
+    dest: /etc/duckdns/duckdns
+    owner: duckdns
+    group: duckdns
+    mode: 0700
+  notify: service duckdns
+
+- name: DuckDNS | Install - Autolaunch the script
+  ansible.builtin.shell: >
+    /etc/duckdns/duckdns
+  when: duckdns_state|default('started') == 'started'

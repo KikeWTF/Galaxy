@@ -1,0 +1,14 @@
+---
+- name: service duckdns
+  ansible.builtin.cron:
+    name: DuckDNS
+    minute: "*/10"
+    job: /etc/duckdns/duckdns
+    user: duckdns
+    state: "{{ 'present' if duckdns_state == 'started' else 'absent' }}"
+  notify: restart cron
+
+- name: restart cron
+  ansible.builtin.service:
+    name: cron
+    state: restarted

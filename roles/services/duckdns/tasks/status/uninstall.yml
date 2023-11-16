@@ -1,0 +1,15 @@
+---
+- name: DuckDNS | Uninstall - Remove the user
+  ansible.builtin.user:
+    name: duckdns
+    state: absent
+
+- name: DuckDNS | Uninstall - Remove the group
+  ansible.builtin.group:
+    name: duckdns
+    state: absent
+
+- name: DuckDNS | Uninstall - Remove the directory
+  ansible.builtin.file:
+    path: /etc/duckdns
+    state: absent

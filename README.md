@@ -47,10 +47,18 @@ This role downloads, creates and manages [LXC](https://linuxcontainers.org/lxc/)
 ### 🧑🏽‍🔧 Services
 
 <details><summary>
+    📁 <a href="./roles/services/duckdns/"><b>services/duckdns</b></a>
+</summary>
+
+This role installs and manage [DuckDNS](https://www.duckdns.org/), a free dynamic DNS service.
+
+</details>
+
+<details><summary>
     📁 <a href="./roles/services/caido/"><b>services/caido</b></a>
 </summary>
 
-This role downloads, installs and manage [Caido](https://caido.io/), a lightweight web security auditing toolkit.
+This role installs and manage [Caido](https://caido.io/), a lightweight web security auditing toolkit.
 
 </details>
 

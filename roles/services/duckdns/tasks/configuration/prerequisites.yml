@@ -1,0 +1,20 @@
+---
+- name: DuckDNS | Prerequisites - Check the variables
+  block:
+    - name: DuckDNS | Prerequisites - Check the 'token' variable
+      ansible.builtin.fail:
+        msg: The 'duckdns_token' variable is required
+      when: duckdns_token == ""
+
+    - name: DuckDNS | Prerequisites - Check the 'domains' variable
+      ansible.builtin.fail:
+        msg: The 'duckdns_domains' variable is required
+      when: duckdns_domains | length == 0
+
+- name: DuckDNS | Prerequisites - Install the dependencies
+  ansible.builtin.package:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - curl
+    - cron

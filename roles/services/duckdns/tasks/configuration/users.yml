@@ -1,0 +1,14 @@
+---
+- name: DuckDNS | Users - Create the group
+  ansible.builtin.group:
+    name: duckdns
+    state: present
+    system: true
+
+- name: DuckDNS | Users - Create the user
+  ansible.builtin.user:
+    name: duckdns
+    group: duckdns
+    shell: /usr/sbin/nologin
+    system: true
+    state: present

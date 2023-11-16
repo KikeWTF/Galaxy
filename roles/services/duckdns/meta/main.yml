@@ -1,0 +1,18 @@
+---
+galaxy_info:
+  min_ansible_version: 2.15.5
+  # --- | Metadata | ---
+  namespace: cosasdepuma
+  role_name: duckdns
+  author: Kike Fontan <@cosasdepuma>
+  description: |
+    DuckDNS management and installation. DuckDNS is a dynamic DNS provider which will point a DNS (sub domains of duckdns.org) to an IP of your choice.
+  galaxy_tags: [cosasdepuma, kikewtf, homelab, lab, selfhosted, dns, ddns, duckdns, dynddns]
+  # --- | Repository | ---
+  license: GPL-3.0-or-later
+  issue_tracker_url: https://github.com/kikewtf/galaxy/issues
+  # --- | Platforms | ---
+  platforms:
+    - name: Debian
+      versions: [bookworm]
+dependencies: []
