@@ -1,0 +1,15 @@
+---
+- name: Postgres | Users - Create the group
+  ansible.builtin.group:
+    name: postgres
+    state: present
+
+- name: Postgres | Users - Create the user
+  ansible.builtin.user:
+    system: true
+    name: postgres
+    group: postgres
+    state: present
+    shell: /bin/sh
+    home: /var/lib/postgresql
+    createhome: false

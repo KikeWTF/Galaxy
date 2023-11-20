@@ -1,10 +1,10 @@
 ---
-- name: LDAP | Client - Install the packages
+- name: LDAP | Server | Utils - Install the packages
   ansible.builtin.package:
     name: ldap-utils
     state: latest
 
-- name: LDAP | Client - Configure the LDAP client
+- name: LDAP | Server | Utils - Configure the LDAP client
   ansible.builtin.template:
     src: server/ldap.conf.j2
     dest: /etc/ldap/ldap.conf

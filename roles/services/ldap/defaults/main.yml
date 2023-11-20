@@ -2,7 +2,7 @@
 # --- | Server | ---
 ldap_fqdn: ldap.home.lab
 ldap_port: "{{ 636 if ldap_tls else 389 }}"
-ldap_server_ip: 192.168.1.2
+ldap_server: false
 # --- | Schema | ---
 ldap_dn: "{{ 'o' if ldap_fqdn | split('.') | count > 3 else 'dc' }}={{ (ldap_fqdn | split('.'))[1:] | join(',dc=') }}"
 ldap_minid: 10000

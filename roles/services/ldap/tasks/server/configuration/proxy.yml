@@ -1,5 +1,5 @@
 ---
-- name: LDAP | Proxy - Default System OU
+- name: LDAP | Server | Proxy - Default System OU
   community.general.ldap_entry:
     dn: ou=system,{{ ldap_dn }}
     state: present
@@ -11,12 +11,12 @@
     bind_dn: cn={{ ldap_admin_user }},{{ ldap_dn }}
     bind_pw: "{{ ldap_admin_pass }}"
 
-- name: LDAP | Proxy - Default Proxy Password
+- name: LDAP | Server | Proxy - Default Proxy Password
   ansible.builtin.shell: >
     /usr/sbin/slappasswd -s '{{ ldap_proxy_pass }}'
   register: ldap_proxy_pass_hash
 
-- name: LDAP | Proxy - Default Proxy User
+- name: LDAP | Server | Proxy - Default Proxy User
   community.general.ldap_entry:
     dn: cn={{ ldap_proxy_user }},ou=system,{{ ldap_dn }}
     state: present

@@ -1,0 +1,6 @@
+---
+- name: service caido
+  ansible.builtin.service:
+    name: caido
+    state: "{{ caido_state if caido_state == 'started' else 'stopped' }}"
+    enabled: "{{ true if caido_state == 'started' else false }}"

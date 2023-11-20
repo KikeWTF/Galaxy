@@ -1,10 +1,10 @@
 ---
-- name: LDAP | LAM - Install the packages
+- name: LDAP | Server | LAM - Install the packages
   ansible.builtin.package:
     name: ldap-account-manager
     state: latest
 
-- name: LDAP | LAM - Configure the LAM service
+- name: LDAP | Server | LAM - Configure the LAM service
   ansible.builtin.template:
     src: server/lam.conf.j2
     dest: /var/lib/ldap-account-manager/config/lam.conf

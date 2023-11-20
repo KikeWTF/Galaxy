@@ -1,41 +1,31 @@
 ---
 
-# --- | Present / Configured | ---
+# --- | Present | ---
 
-- name: Loki | Install and configure the services
+- name: Loki | Install and/or stop the service
   hosts: loki
   become: true
   roles:
     - {role: services/ldap, state: present}
     - {role: services/duckdns, state: present}
-  tags: [present, configure, configured]
+  tags: [present]
 
 # --- | Started | ---
 
-- name: Loki | Install, configure and start the services
+- name: Loki | Install and/or start the service
   hosts: loki
   become: true
   roles:
     - {role: services/ldap, state: started}
     - {role: services/duckdns, state: started}
-  tags: [start, started, install, installed]
-
-# --- | Stopped | ---
-
-- name: Loki | Stop the services
-  hosts: loki
-  roles:
-    - {role: services/ldap, state: stopped}
-    - {role: services/duckdns, state: stopped}
-  become: true
-  tags: [stop, stopped]
+  tags: [start, started]
 
 # --- | Absent | ---
 
-- name: Loki | Uninstall the services
+- name: Loki | Uninstall the service
   hosts: loki
   roles:
     - {role: services/ldap, state: absent}
     - {role: services/duckdns, state: absent}
   become: true
-  tags: [absent, uninstall, uninstalled]
+  tags: [absent]

@@ -1,0 +1,14 @@
+---
+- name: MariaDB | Install - Install the service
+  ansible.builtin.package:
+    name: "{{ item }}"
+    state: latest
+  with_items:
+    - mariadb-common
+    - mariadb-server
+
+- name: MariaDB | Install - Start the service
+  ansible.builtin.service:
+    name: mariadb
+    state: started
+    enabled: true

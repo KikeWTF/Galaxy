@@ -24,37 +24,35 @@ This role installs and configures [OpenLDAP](https://www.openldap.org/) on the s
 
 The following states are available for this role:
 
-| State | Description |
-| --- | --- |
-| `present` | Ensure that the LDAP client/server is installed and configured. |
-| `configured` | Alias for `present`. |
-| `started` | Ensure that the LDAP client/server is installed, configured and running. |
-| `stopped` | Ensure that the LDAP client/server is installed and configured but not running. |
-| `absent` | Ensure that the LDAP client/server is not installed. |
+| State     | Description                                             |
+| --------- | ------------------------------------------------------- |
+| `present` | Ensure that the services are installed but not running. |
+| `started` | Ensure that the services are installed and running.     |
+| `absent`  | Ensure that the services are not installed.             |
 
 ## 🪄 Variables
 
-The following variables can be set to customize the LDAP configuration:
+The following variables can be set to customize the service:
 
-| Side | Variable | Default | Description |
-| --- | --- | --- | --- |
-| Server | ldap_admin_pass | `ldapadminldap` | Password of the administrative user (LAM also uses this password). |
-| Server | ldap_admin_user | `admin` | Username of the administrative user. |
-| Server | ldap_default_group | `users` | The default group to use for new users. |
-| Server | ldap_default_pass | `changeme` | The default password to use for new users. |
-| Both | ldap_dn | `dc=home,dc=lab` | The base DN for LDAP searches. |
-| Both | ldap_fqdn | `ldap.home.lab` | The FQDN of the LDAP server. |
-| Server | ldap_lam | `true` | Enable LDAP Account Manager (LAM). |
-| Server | ldap_maxid | `30000` | The maximum UID/GID number to use for LDAP users/groups. |
-| Server | ldap_minid | `10000` | The minimum UID/GID number to use for LDAP users/groups. |
-| Both | ldap_port | `389` if not TLS, else `636` | The port to use for LDAP connections. |
-| Both | ldap_proxy_pass | `readonly` | The password to use for the read-only user. |
-| Both | ldap_proxy_user | `proxy` | The username for the read-only user. |
-| Server | ldap_server_ip | `192.168.1.2` | The IP address of the LDAP server. |
-| Server | ldap_sudo_rules | `[]` | A list of sudo rules to create in LDAP. |
-| Both | ldap_tls | `true` | Enable LDAPS and disable LDAP. |
-| Server | ldap_utils | `true` | Enable LDAP Utils. |
-| Server | ldap_users | `[]` | A list of users (and inherit groups) to create in LDAP. |
+| Side   | Variable           | Default                      | Description                                                        |
+| ------ | ------------------ | ---------------------------- | ------------------------------------------------------------------ |
+| Server | ldap_admin_pass    | `ldapadminldap`              | Password of the administrative user (LAM also uses this password). |
+| Server | ldap_admin_user    | `admin`                      | Username of the administrative user.                               |
+| Server | ldap_default_group | `users`                      | The default group to use for new users.                            |
+| Server | ldap_default_pass  | `changeme`                   | The default password to use for new users.                         |
+| Both   | ldap_dn            | `dc=home,dc=lab`             | The base DN for LDAP searches.                                     |
+| Both   | ldap_fqdn          | `ldap.home.lab`              | The FQDN of the LDAP server.                                       |
+| Server | ldap_lam           | `true`                       | Enable LDAP Account Manager (LAM).                                 |
+| Server | ldap_maxid         | `30000`                      | The maximum UID/GID number to use for LDAP users/groups.           |
+| Server | ldap_minid         | `10000`                      | The minimum UID/GID number to use for LDAP users/groups.           |
+| Both   | ldap_port          | `389` if not TLS, else `636` | The port to use for LDAP connections.                              |
+| Both   | ldap_proxy_pass    | `readonly`                   | The password to use for the read-only user.                        |
+| Both   | ldap_proxy_user    | `proxy`                      | The username for the read-only user.                               |
+| Server | ldap_server        | `false`                      | Install the LDAP server.                                       |
+| Server | ldap_sudo_rules    | `[]`                         | A list of sudo rules to create in LDAP.                            |
+| Both   | ldap_tls           | `true`                       | Enable LDAPS and disable LDAP.                                     |
+| Server | ldap_utils         | `true`                       | Enable LDAP Utils.                                                 |
+| Server | ldap_users         | `[]`                         | A list of users (and inherit groups) to create in LDAP.            |
 
 ## ✨ Features
 

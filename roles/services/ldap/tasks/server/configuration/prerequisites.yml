@@ -1,5 +1,5 @@
 ---
-- name: LDAP | Prerequisites - Install the prerequisites
+- name: LDAP | Server | Prerequisites - Install the prerequisites
   ansible.builtin.package:
     name: "{{ item }}"
     state: latest

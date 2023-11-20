@@ -18,21 +18,20 @@ This role installs and manages [DuckDNS](https://www.duckdns.org/), a free dynam
 
 The following states are available for this role:
 
-| State | Description |
-| --- | --- |
+| State     | Description                                           |
+| --------- | ----------------------------------------------------- |
 | `present` | Ensure that the service is installed but not running. |
-| `started` | Ensure that the service is installed and running. |
-| `stopped` | Ensure that the service is not running. |
-| `absent`  | Ensure that the service is uninstalled. |
+| `started` | Ensure that the service is installed and running.     |
+| `absent`  | Ensure that the service is uninstalled.               |
 
 ## 🪄 Variables
 
 The following variables can be set to customize the service:
 
-| Required | Variable | Default | Description |
-| --- | --- | --- | --- |
-| ✔ | duckdns_domains | `[]` | A list of domains to register with DuckDNS (more than zero required). |
-| ✔ | duckdns_token | - | The DuckDNS token to use for authentication (prompted if not supplied). |
+| Required | Variable        | Default | Description                                                               |
+| ---      | --------------- | ------- | ------------------------------------------------------------------------- |
+| ✔        | duckdns_domains | `[]`    | A list of domains to update (more than zero, without the `.duckdns.org`). |
+| ✔        | duckdns_token   | -       | The DuckDNS token to use for authentication.                              |
 
 ## 📒 Example Playbooks
 
@@ -42,7 +41,7 @@ Here are some example playbooks for this role:
 # Install the service omitting the token.
 - hosts: dyndns.home.lab
   become: true
-  roles: services/duckdns
+  roles: [{ role: services/duckdns, state: present }]
   vars: { duckdns_domains: [homedns] }
 
 # Install and start the service specifiying the token.
@@ -61,7 +60,7 @@ Here are some example playbooks for this role:
 # Stop the service.
 - hosts: dyndns.home.lab
   become: true
-  roles: [{ role: services/duckdns, state: stopped }]
+  roles: [{ role: services/duckdns, state: present }]
 
 # Uninstall the service.
 - hosts: dyndns.home.lab

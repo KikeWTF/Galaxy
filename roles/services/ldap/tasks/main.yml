@@ -1,20 +1,25 @@
 ---
+- name: LDAP | Gather facts
+  ansible.builtin.set_fact: {ldap_state: "{{ state|default('started') }}"}
+  when: ldap_state is not defined
+
 - name: LDAP | Server actions
   when:
+    - ldap_server
     - ansible_os_family | lower == 'debian'
-    - ldap_server_ip == ansible_default_ipv4.address
   block:
-    - name: LDAP | Server - Install the prerequisites
-      when: state is not defined or state in ['present', 'configured', 'started']
-      ansible.builtin.import_tasks: server/prerequisites.yml
+    - name: LDAP | Server - Gather facts
+      ansible.builtin.stat: {path: /etc/ldap}
+      register: ldap_is_installed
 
     - name: LDAP | Server - Install the service
-      when: state is not defined or state in ['present', 'configured', 'started']
-      ansible.builtin.import_tasks: server/install.yml
-
-    - name: LDAP | Server - Configure the service
-      when: state is not defined or state in ['present', 'configured', 'started']
+      when:
+        - not ldap_is_installed.stat.exists
+        - ldap_state in ['present','started']
       block:
+        # service
+        - ansible.builtin.import_tasks: server/configuration/prerequisites.yml
+        - ansible.builtin.import_tasks: server/status/install.yml
         - ansible.builtin.import_tasks: server/configuration/properties.yml
         - ansible.builtin.import_tasks: server/configuration/dit.yml
         - ansible.builtin.import_tasks: server/configuration/policies.yml
@@ -23,34 +28,40 @@
         - ansible.builtin.import_tasks: server/configuration/sudo.yml
         - ansible.builtin.import_tasks: server/configuration/tls.yml
           when: ldap_tls
-
-    - name: LDAP | Server - Install the server utilities
-      when: state is not defined or state in ['present', 'configured', 'started']
-      block:
-        - ansible.builtin.import_tasks: server/utils/client.yml
+        # utilities
+        - ansible.builtin.import_tasks: server/tools/utils.yml
           when: ldap_utils
-
-        - ansible.builtin.import_tasks: server/utils/lam.yml
+        - ansible.builtin.import_tasks: server/tools/lam.yml
           when: ldap_lam
 
-    - name: LDAP | Start/Stop the services
-      when: state|default('started') in ['started', 'stopped']
-      ansible.builtin.import_tasks: server/status.yml
-      vars:
-        ldap_status: "{{ state }}"
+    - name: LDAP | Server - Control the service
+      when: ldap_state in ['present','started','absent']
+      ansible.builtin.assert: {that: true, quiet: true}
+      changed_when: true
+      notify: service ldap
+
+    - name: LDAP | Server - Uninstall the service
+      when: ldap_state == 'absent'
+      ansible.builtin.import_tasks: server/status/uninstall.yml
 
 - name: LDAP | Client actions
   block:
-    - name: LDAP | Client - Install the SSSD client
-      when: state is not defined or state in ['present', 'configured', 'started']
-      ansible.builtin.import_tasks: client/sssd.yml
+    - name: LDAP | Client - Gather facts
+      ansible.builtin.stat: {path: /etc/sssd}
+      register: ldap_sssd_is_installed
+    
+    - name: LDAP | Client - Install the service
+      when:
+        - not ldap_sssd_is_installed.stat.exists
+        - ldap_state in ['present','started']
+      ansible.builtin.import_tasks: client/install.yml
 
-    - name: LDAP | Start/Stop the service
-      when: state|default('started') in ['started', 'stopped']
-      ansible.builtin.import_tasks: client/status.yml
-      vars:
-        ldap_status: "{{ state }}"
+    - name: LDAP | Client - Control the service
+      when: ldap_state in ['present','started','absent']
+      ansible.builtin.assert: {that: true, quiet: true}
+      changed_when: true
+      notify: service sssd
 
-- name: LDAP | Uninstall the service
-  when: state == 'absent'
-  ansible.builtin.import_tasks: uninstall.yml
+    - name: LDAP | Client - Uninstall the service
+      when: ldap_state == 'absent'
+      ansible.builtin.import_tasks: client/uninstall.yml

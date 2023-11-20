@@ -1,5 +1,5 @@
 ---
-- name: LDAP | Properties - Copy the default configuration file
+- name: LDAP | Server | Properties - Copy the default configuration file
   ansible.builtin.template:
     src: server/slapd.default.j2
     dest: /etc/default/slapd
@@ -7,33 +7,33 @@
     group: root
     mode: 0644
 
-- name: LDAP | Properties - Configure server logging level
+- name: LDAP | Server | Properties - Configure server logging level
   community.general.ldap_attrs:
     dn: cn=config
     state: exact
     attributes:
       olcLogLevel: stats  # log connections/operations/results
 
-- name: LDAP | Properties - Disable anonymous access
+- name: LDAP | Server | Properties - Disable anonymous access
   community.general.ldap_attrs:
     dn: cn=config
     state: exact
     attributes:
       olcDisallows: bind_anon
 
-- name: LDAP | Properties - Configure the server domain
+- name: LDAP | Server | Properties - Configure the server domain
   community.general.ldap_attrs:
     dn: olcDatabase={1}mdb,cn=config
     state: exact
     attributes:
       olcSuffix: "{{ ldap_dn }}"
 
-- name: LDAP | Properties - Calculate the hash of the admin account
+- name: LDAP | Server | Properties - Calculate the hash of the admin account
   ansible.builtin.shell: >
     /usr/sbin/slappasswd -s '{{ ldap_admin_pass }}'
   register: ldap_admin_pass_hash
 
-- name: LDAP | Properties - Configure the server admin account
+- name: LDAP | Server | Properties - Configure the server admin account
   community.general.ldap_attrs:
     dn: olcDatabase={1}mdb,cn=config
     state: exact
@@ -41,7 +41,7 @@
       olcRootDN: cn={{ ldap_admin_user }},{{ ldap_dn}}
       olcRootPW: "{{ ldap_admin_pass_hash.stdout }}"
 
-- name: LDAP | Properties - Configure ACL
+- name: LDAP | Server | Properties - Configure ACL
   community.general.ldap_attrs:
     dn: olcDatabase={1}mdb,cn=config
     state: exact

@@ -1,5 +1,5 @@
 ---
-- name: LDAP | SSSD - Install the packages
+- name: LDAP | Client | Install - Install the packages
   ansible.builtin.package:
     name: "{{ item }}"
     state: latest
@@ -12,12 +12,12 @@
     - sssd-tools
     - sudo
 
-- name: LDAP | SSSD - Remove fragmented configuration files
+- name: LDAP | Client | Install - Remove fragmented configuration files
   ansible.builtin.file:
     path: /etc/sssd/conf.d
     state: absent
 
-- name: LDAP | SSSD - Configure the service
+- name: LDAP | Client | Install - Configure the service
   ansible.builtin.template:
     src: client/sssd.conf.j2
     dest: /etc/sssd/sssd.conf
@@ -25,14 +25,14 @@
     group: root
     mode: 0600
 
-- name: LDAP | SSSD - Obfuscate the LDAP password
+- name: LDAP | Client | Install - Obfuscate the LDAP password
   ansible.builtin.shell: >
     /bin/echo -n '{{ ldap_proxy_pass }}' |
     /usr/sbin/sss_obfuscate
     --stdin
     --domain authentication
 
-- name: LDAP | SSSD - Download server certificate
+- name: LDAP | Client | Install - Download server certificate
   ansible.builtin.shell:
     cmd: >
       /usr/bin/openssl s_client
@@ -42,13 +42,13 @@
     creates: /etc/sssd/ldap.crt
   when: ldap_tls
 
-- name: LDAP | SSSD - Enable PAM MkHomeDir
+- name: LDAP | Client | Install - Enable PAM MkHomeDir
   ansible.builtin.shell: >
     /usr/sbin/pam-auth-update
     --enable mkhomedir
   when: ansible_os_family | lower == 'debian'  # FIXME: RHEL/Fedora?
 
-- name: LDAP | SSSD - Restart the service
+- name: LDAP | Client | Install - Restart the service
   ansible.builtin.service:
     name: sssd
     state: restarted

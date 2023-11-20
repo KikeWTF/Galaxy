@@ -6,14 +6,23 @@ proxmox_default_searchdomain: "{{ homelab_domain }}"
 proxmox_containers:
   - name: loki.{{ homelab_domain }}
     description: "Loki - OpenLDAP Server"
-    ipv4: 192.168.1.2
+    ipv4: 192.168.1.3
     memory: 512
     distro: debian-12-standard_12.2-1_amd64.tar.zst
-    tags: [debian, ldap, management]
+    tags: [debian, networking, ldap]
+  
+  - name: ultron.{{ homelab_domain }}
+    description: "Ultron - Database Server"
+    ipv4: 192.168.1.4
+    memory: 1024
+    cores: 1
+    distro: debian-12-standard_12.2-1_amd64.tar.zst
+    tags: [debian, networking, postgres]
+    mounts: {mp0: '/mnt/nas,mp=/mnt/nas'}
 
   - name: spiderman.{{ homelab_domain }}
     description: "Spiderman - Caido Server"
-    ipv4: 192.168.1.5
+    ipv4: 192.168.1.20
     memory: 512
     distro: debian-12-standard_12.2-1_amd64.tar.zst
-    tags: [debian, caido, hacking]
+    tags: [debian, hacking, caido]

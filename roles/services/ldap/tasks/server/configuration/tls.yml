@@ -1,7 +1,7 @@
 ---
-- name: LDAP | TLS - Generate the certificates
+- name: LDAP | Server | TLS - Generate the certificates
   block:
-    - name: LDAP | TLS - Create the directory
+    - name: LDAP | Server | TLS - Create the directory
       ansible.builtin.file:
         path: /etc/ldap/sasl2
         state: directory
@@ -9,7 +9,7 @@
         owner: openldap
         group: openldap
 
-    - name: LDAP | TLS - Generate the private key
+    - name: LDAP | Server | TLS - Generate the private key
       community.crypto.openssl_privatekey:
         path: /etc/ldap/sasl2/ldap.key
         type: RSA
@@ -18,7 +18,7 @@
         owner: openldap
         group: openldap
 
-    - name: LDAP | TLS - Generate the certificate signing request
+    - name: LDAP | Server | TLS - Generate the certificate signing request
       community.crypto.openssl_csr:
         path: /etc/ldap/sasl2/ldap.csr
         privatekey_path: /etc/ldap/sasl2/ldap.key
@@ -30,7 +30,7 @@
         owner: openldap
         group: openldap
 
-    - name: LDAP | TLS - Generate the certificate
+    - name: LDAP | Server | TLS - Generate the certificate
       community.crypto.x509_certificate:
         path: /etc/ldap/sasl2/ldap.crt
         csr_path: /etc/ldap/sasl2/ldap.csr
@@ -42,7 +42,7 @@
         owner: openldap
         group: openldap
 
-    - name: LDAP | TLS - Copy the CA certificate
+    - name: LDAP | Server | TLS - Copy the CA certificate
       ansible.builtin.copy:
         src: /etc/ssl/certs/ca-certificates.crt
         dest: /etc/ldap/sasl2/ca.crt
@@ -50,7 +50,7 @@
         owner: openldap
         group: openldap
 
-- name: LDAP | TLS - Configure the server
+- name: LDAP | Server | TLS - Configure the server
   community.general.ldap_attrs:
     dn: cn=config
     attributes:
@@ -62,14 +62,14 @@
       olcTLSVerifyClient: never
       olcTLSRandFile: /dev/urandom
 
-- name: LDAP | TLS - Modify the service configuration
+- name: LDAP | Server | TLS - Modify the service configuration
   ansible.builtin.lineinfile:
     path: /etc/default/slapd
     regexp: '^SLAPD_SERVICES='
     line: SLAPD_SERVICES="ldapi:/// ldaps:///"
     state: present
 
-- name: LDAP | TLS - Restart the service
+- name: LDAP | Server | TLS - Restart the service
   ansible.builtin.service:
     name: slapd
     state: restarted

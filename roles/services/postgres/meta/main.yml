@@ -1,0 +1,18 @@
+---
+galaxy_info:
+  min_ansible_version: 2.15.5
+  # --- | Metadata | ---
+  namespace: cosasdepuma
+  role_name: caido
+  author: Kike Fontan <@cosasdepuma>
+  description: |
+    Caido management and installation.
+  galaxy_tags: [cosasdepuma, kikewtf, homelab, lab, selfhosted, caido, hacking, proxy, web-proxy]
+  # --- | Repository | ---
+  license: GPL-3.0-or-later
+  issue_tracker_url: https://github.com/kikewtf/galaxy/issues
+  # --- | Platforms | ---
+  platforms:
+    - name: Debian
+      versions: [bookworm]
+dependencies: []

@@ -1,5 +1,5 @@
 ---
-- name: LXC - Create the containers
+- name: LXC | Create - Create the containers
   community.general.proxmox:
     state: present
     # metadata
@@ -11,8 +11,10 @@
     # specs
     cores: "{{ item.cores|default(proxmox_default_cores) }}"
     disk: "{{ item.disk|default(proxmox_default_disk) }}"
+    mounts: "{{ item.mounts|default(omit) }}"
     hostname: "{{ item.name }}"
     memory: "{{ item.memory|default(proxmox_default_memory) | int }}"
+    swap: "{{ item.swap|default(omit) }}"
     nameserver: "{{ item.nameserver|default(proxmox_default_dns) }}"
     searchdomain: "{{ item.searchdomain|default(proxmox_default_searchdomain) }}"
     netif:

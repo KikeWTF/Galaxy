@@ -1,6 +1,0 @@
----
-- name: Caido | Status - Control the service
-  ansible.builtin.service:
-    name: caido
-    state: "{{ caido_status }}"
-    enabled: "{{ caido_status == 'started' }}"

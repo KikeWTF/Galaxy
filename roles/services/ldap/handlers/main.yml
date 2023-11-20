@@ -1,0 +1,20 @@
+---
+- name: service ldap
+  ansible.builtin.service:
+    name: slapd
+    state: "{{ ldap_state if ldap_state == 'started' else 'stopped' }}"
+    enabled: "{{ true if ldap_state == 'started' else false }}"
+  notify: service lam
+
+- name: service lam
+  ansible.builtin.service:
+    name: apache2
+    state: "{{ ldap_state if ldap_state == 'started' else 'stopped' }}"
+    enabled: "{{ true if ldap_state == 'started' else false }}"
+  when: ldap_lam
+
+- name: service sssd
+  ansible.builtin.service:
+    name: sssd
+    state: "{{ ldap_state if ldap_state == 'started' else 'stopped' }}"
+    enabled: "{{ true if ldap_state == 'started' else false }}"

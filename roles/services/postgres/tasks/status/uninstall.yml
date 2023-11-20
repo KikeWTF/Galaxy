@@ -1,0 +1,26 @@
+---
+- name: Postgres | Uninstall - Uninstall the service
+  ansible.builtin.package:
+    name: "{{ item }}"
+    state: absent
+  with_items:
+    - postgresql
+    - postgresql-contrib
+    - python3-psycopg2
+
+- name: Postgres | Uninstall - Remove the data directory
+  ansible.builtin.file:
+    path: /var/lib/postgresql
+    state: absent
+
+- name: Postgres | Uninstall - Remove the user
+  ansible.builtin.user:
+    name: postgres
+    state: absent
+    remove: true
+    force: true
+
+- name: Postgres | Uninstall - Remove the group
+  ansible.builtin.group:
+    name: postgres
+    state: absent

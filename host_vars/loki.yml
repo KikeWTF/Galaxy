@@ -3,6 +3,7 @@
 duckdns_domains: [kikewtf, criswtf]
 
 # --- | LDAP | ---
+ldap_server: true
 ldap_fqdn: "{{ ansible_hostname }}.{{ homelab_domain }}"
 ldap_users:
   - name: Service

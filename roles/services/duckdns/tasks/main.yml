@@ -5,17 +5,18 @@
       when: duckdns_state is not defined
     - ansible.builtin.stat: {path: /etc/duckdns/duckdns}
       register: duckdns_is_installed
-    - debug: msg="duckdns_state={{ duckdns_state }} duckdns_is_installed.stat.exists={{ duckdns_is_installed.stat.exists }}"
 
 - name: DuckDNS | Install the service
-  when: duckdns_state == 'present' or (not duckdns_is_installed.stat.exists and duckdns_state == 'started')
+  when:
+    - not duckdns_is_installed.stat.exists
+    - duckdns_state in ['present','started']
   block:
     - ansible.builtin.import_tasks: configuration/prerequisites.yml
     - ansible.builtin.import_tasks: configuration/users.yml
     - ansible.builtin.import_tasks: status/install.yml
 
 - name: DuckDNS | Control the service
-  when: duckdns_state in ['present','started','stopped','absent']
+  when: duckdns_state in ['present','started','absent']
   ansible.builtin.assert: {that: true, quiet: true}
   changed_when: true
   notify: service duckdns

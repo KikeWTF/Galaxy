@@ -1,0 +1,22 @@
+---
+- name: MariaDB | Configure - Configure the service
+  ansible.builtin.template:
+    src: server.cnf.j2
+    dest: /etc/mysql/mariadb.conf
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: MariaDB | Configure - Configure the log rotation
+  ansible.builtin.template:
+    src: logrotate.j2
+    dest: /etc/logrotate.d/mariadb
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: MariaDB | Configure - Swappiness
+  ansible.builtin.sysctl:
+    name: vm.swappiness
+    value: 1
+    state: present

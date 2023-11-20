@@ -55,23 +55,25 @@ The following variables can be set to customize the LXC configuration:
 
 The `proxmox_containers` variable can be used to create LXC containers. The accepted values are the following:
 
-| Variable | Default | Description |
-| --- | --- | --- |
-| cores | `{{ proxmox_default_cores }}` | Number of cores of the LXC container. |
-| description | `{{ name }}` | Description of the LXC container. |
-| disk | `{{ proxmox_default_disk }}` | Disk size of the LXC container (in GB). |
-| distro |  **required** (no defaults) | Template of the LXC container. It should be available via `pveam available`. |
-| ipv4 | **required** (no defaults) | IPv4 address of the LXC container. |
-| memory | `{{ proxmox_default_memory }}` | Memory size of the LXC container (in MB). |
-| name | **required** (no defaults) | Name and hostname of the LXC container. |
-| nameserver | `{{ proxmox_default_dns }}` | DNS server of the LXC container. |
-| onboot | `true` | Whether the LXC container should start on boot. |
-| password | `{{ ansible_password }}` | `root` password of the LXC container. |
-| pubkey | omitted | SSH public key to add to the `root` user of the LXC container. |
-| searchdomain | `{{ proxmox_default_searchdomain }}` | Search domain of the LXC container. |
-| storage | `{{ proxmox_container_storage }}` | Storage of the LXC container. |
-| tags | `[ {{ distro }} ]` | Tags of the LXC container. |
-| vmid | `proxmox_minid` + Latest octect of the IP address | ID of the LXC container. |
+| Variable     | Default                                           | Description                                                                  |
+| ------------ | ------------------------------------------------- | ---------------------------------------------------------------------------- |
+| cores        | `{{ proxmox_default_cores }}`                     | Number of cores of the LXC container.                                        |
+| description  | `{{ name }}`                                      | Description of the LXC container.                                            |
+| disk         | `{{ proxmox_default_disk }}`                      | Disk size of the LXC container (in GB).                                      |
+| distro       |  **required** (no defaults)                       | Template of the LXC container. It should be available via `pveam available`. |
+| ipv4         | **required** (no defaults)                        | IPv4 address of the LXC container.                                           |
+| memory       | `{{ proxmox_default_memory }}`                    | Memory size of the LXC container (in MB).                                    |
+| mounts       | omitted                                           | List of mounts (external disks) for the LXC container.                       |
+| name         | **required** (no defaults)                        | Name and hostname of the LXC container.                                      |
+| nameserver   | `{{ proxmox_default_dns }}`                       | DNS server of the LXC container.                                             |
+| onboot       | `true`                                            | Whether the LXC container should start on boot.                              |
+| password     | `{{ ansible_password }}`                          | `root` password of the LXC container.                                        |
+| pubkey       | omitted                                           | SSH public key to add to the `root` user of the LXC container.               |
+| searchdomain | `{{ proxmox_default_searchdomain }}`              | Search domain of the LXC container.                                          |
+| storage      | `{{ proxmox_container_storage }}`                 | Storage of the LXC container.                                                |
+| swap         | omitted                                           | Swap size of the LXC container (in MB).                                       |
+| tags         | `[ {{ distro }} ]`                                | Tags of the LXC container.                                                   |
+| vmid         | `proxmox_minid` + Latest octect of the IP address | ID of the LXC container.                                                     |
 
 ## 📒 Example Playbooks
 
@@ -87,6 +89,18 @@ Here are some example playbooks for this role:
       - name: helloworld
         ipv4: 10.10.10.1
         distro: debian-12-standard_12.2-1_amd64.tar.zst
+
+# Download, create, configure and start a LXC container with shared mount.
+- hosts: proxmox.home.lab
+  become: true
+  roles: proxmox/lxc
+  vars:
+    proxmox_containers:
+      - name: nas
+        ipv4: 10.10.10.2
+        distro: debian-12-standard_12.2-1_amd64.tar.zst
+        mounts:
+          - mp0: /mnt/pve/storage,mp=/mnt/storage
 
 # Download, create, configure and start a LXC container with custom values.
 - hosts: proxmox.home.lab

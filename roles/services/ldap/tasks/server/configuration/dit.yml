@@ -1,5 +1,5 @@
 ---
-- name: LDAP | DIT - Default DC
+- name: LDAP | Server | DIT - Default DC
   community.general.ldap_entry:
     dn: "{{ ldap_dn }}"
     state: present
@@ -11,7 +11,7 @@
     bind_dn: cn={{ ldap_admin_user }},{{ ldap_dn }}
     bind_pw: "{{ ldap_admin_pass }}"
 
-- name: LDAP | DIT - Default OUs
+- name: LDAP | Server | DIT - Default OUs
   community.general.ldap_entry:
     dn: ou={{ item }},{{ ldap_dn }}
     state: present

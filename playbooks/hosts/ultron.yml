@@ -1,0 +1,28 @@
+---
+
+# --- | Present | ---
+
+- name: Ultron | Install and/or stop the service
+  hosts: ultron
+  become: true
+  roles:
+    - {role: services/postgres, state: present}
+  tags: [present]
+
+# --- | Started | ---
+
+- name: Ultron | Install and/or start the service
+  hosts: ultron
+  become: true
+  roles:
+    - {role: services/postgres, state: started}
+  tags: [start, started]
+
+# --- | Absent | ---
+
+- name: Ultron | Uninstall the service
+  hosts: ultron
+  roles:
+    - {role: services/postgres, state: absent}
+  become: true
+  tags: [absent]

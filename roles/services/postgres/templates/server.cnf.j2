@@ -1,0 +1,29 @@
+[client]
+
+[mysqld]
+# --- | Service | ---
+bind-address = {{ '0.0.0.0' if mariadb_exposed else '127.0.0.1' }}
+port = {{ mariadb_port }}
+unix_socket = OFF
+
+# --- | User | ---
+user = mysql
+
+# --- | Files | ---
+datadir = {{ mariadb_data }}
+
+# --- | Logs | ---
+log_error = /var/log/mariadb/error.log
+
+# --- | Performance | ---
+key_buffer_size = 16M
+max_allowed_packet = 16M
+thread_stack = 192K
+thread_cache_size = 8
+query_cache_limit = 32M
+
+# --- | Security | ---
+skip-external-locking
+
+# --- | Includes | ---
+!includedir /etc/mysql/mariadb.conf.d/

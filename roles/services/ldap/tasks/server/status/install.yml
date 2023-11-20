@@ -1,5 +1,5 @@
 ---
-- name: LDAP | Install - Install the server packages
+- name: LDAP | Server | Install - Install the packages
   ansible.builtin.package:
     name: "{{ item }}"
     state: latest
@@ -8,7 +8,7 @@
     - openssl
     - slapd
 
-- name: LDAP | Install - Ensure that the service is started and enabled
+- name: LDAP | Server | Install - Ensure that the service is started and enabled
   ansible.builtin.service:
     name: slapd
     state: started

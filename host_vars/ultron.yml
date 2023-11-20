@@ -1,0 +1,9 @@
+---
+# --- | Postgres | ---
+postgres_databases:
+  - name: "ultron"
+    user: "ultron"
+    password: "ultron"
+  - name: "avengers"
+    user: "nick"
+    password: "fury"
