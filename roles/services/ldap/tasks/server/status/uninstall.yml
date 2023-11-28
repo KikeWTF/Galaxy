@@ -8,13 +8,13 @@
     autoremove: true
   when: ansible_os_family | lower == 'debian'
   with_items:
-      # ansible (management)
-      - python3-cryptography
-      - python3-ldap
-      # ldap / slapd (server)
-      - ldap-account-manager
-      - ldap-utils
-      - slapd
+    # ansible (management)
+    - python3-cryptography
+    - python3-ldap
+    # ldap / slapd (server)
+    - ldap-account-manager
+    - ldap-utils
+    - slapd
 
 - name: LDAP | Server | Uninstall - Remove service files and directories
   ansible.builtin.file:

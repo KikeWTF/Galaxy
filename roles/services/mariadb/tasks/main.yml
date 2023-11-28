@@ -1,0 +1,30 @@
+---
+- name: MariaDB | Gather facts
+  block:
+    - ansible.builtin.set_fact: {mariadb_state: "{{ state|default('started') }}"}
+      when: mariadb_state is not defined
+    - ansible.builtin.stat: {path: /usr/local/bin/caido}
+      register: mariadb_is_installed
+
+- name: MariaDB | Install the service
+  when: mariadb_state == 'present' or (not mariadb_is_installed.stat.exists and mariadb_state == 'started')
+  block:
+    - ansible.builtin.import_tasks: configuration/prerequisites.yml
+    - ansible.builtin.import_tasks: status/install.yml
+    - ansible.builtin.import_tasks: configuration/directories.yml
+    - ansible.builtin.import_tasks: configuration/configure.yml
+    - ansible.builtin.import_tasks: configuration/security.yml
+    - ansible.builtin.import_tasks: configuration/schema.yml
+
+- name: MariaDB | Control the service
+  when: mariadb_state in ['present','started','absent']
+  ansible.builtin.assert: {that: true, quiet: true}
+  changed_when: true
+  notify: service mariadb
+
+- name: MariaDB | Uninstall the service
+  when: mariadb_state == 'absent'
+  ansible.builtin.import_tasks: status/uninstall.yml
+
+  # TODO: MySQL Secure & Initialization
+  # TODO: https://github.com/mahdi22/ansible-mariadb-install/blob/master/tasks/configure-mariadb.yml

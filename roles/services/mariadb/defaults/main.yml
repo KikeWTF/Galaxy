@@ -1,6 +1,7 @@
 ---
 mariadb_bind: "{{ ansible_default_ipv4.address }}"
+mariadb_data: /var/lib/mariadb
+mariadb_databases: []
 mariadb_exposed: true
 mariadb_port: 3306
-mariadb_data: /var/lib/mariadb
 mariadb_logrotate: daily

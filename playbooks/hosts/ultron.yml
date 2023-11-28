@@ -6,7 +6,7 @@
   hosts: ultron
   become: true
   roles:
-    - {role: services/postgres, state: present}
+    - {role: services/mariadb, state: present}
   tags: [present]
 
 # --- | Started | ---
@@ -15,7 +15,7 @@
   hosts: ultron
   become: true
   roles:
-    - {role: services/postgres, state: started}
+    - {role: services/mariadb, state: started}
   tags: [start, started]
 
 # --- | Absent | ---
@@ -23,6 +23,6 @@
 - name: Ultron | Uninstall the service
   hosts: ultron
   roles:
-    - {role: services/postgres, state: absent}
+    - {role: services/mariadb, state: absent}
   become: true
   tags: [absent]

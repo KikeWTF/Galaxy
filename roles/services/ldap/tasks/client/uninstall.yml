@@ -4,14 +4,14 @@
     name: "{{ item }}"
     state: absent
   with_items:
-      # ansible (management)
-      - python3-cryptography
-      # sssd (client)
-      - libnss-sss
-      - libpam-sss
-      - libsss-sudo
-      - sssd
-      - sssd-tools
+    # ansible (management)
+    - python3-cryptography
+    # sssd (client)
+    - libnss-sss
+    - libpam-sss
+    - libsss-sudo
+    - sssd
+    - sssd-tools
 
 - name: LDAP | Client | Uninstall - Remove service files and directories
   ansible.builtin.file:

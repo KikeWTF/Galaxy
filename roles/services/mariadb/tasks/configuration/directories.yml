@@ -1,0 +1,11 @@
+---
+- name: MariaDB | Directories - Create the directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: mysql
+    group: mysql
+    mode: '0750'
+  with_items:
+    - /var/log/mariadb
+    - "{{ mariadb_data }}"

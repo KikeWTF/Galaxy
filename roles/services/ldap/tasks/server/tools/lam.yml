@@ -11,3 +11,8 @@
     owner: root
     group: root
     mode: 0644
+
+- name: LDAP | Server | LAM - Remove default Apache installation files
+  ansible.builtin.file:
+    path: /var/www/html/index.html
+    state: absent

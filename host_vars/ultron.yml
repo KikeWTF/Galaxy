@@ -1,6 +1,6 @@
 ---
-# --- | Postgres | ---
-postgres_databases:
+# --- | MariaDB | ---
+mariadb_databases:
   - name: "ultron"
     user: "ultron"
     password: "ultron"

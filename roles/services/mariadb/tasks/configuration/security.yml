@@ -1,0 +1,13 @@
+---
+- name: MariaDB | Security - Gather facts
+  block:
+    - ansible.builtin.shell: >
+        mysql -h localhost -u root -e "quit"
+      changed_when: false
+      failed_when: false
+      register: mariadb_check_rootpasswd
+    - ansible.builtin.shell: >
+        mysql -h localhost -u root -p{{ mariadb_root_password }} -e "quit"
+      changed_when: false
+      failed_when: false
+      register: mariadb_check_rootpasswd2

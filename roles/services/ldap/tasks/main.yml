@@ -49,7 +49,7 @@
     - name: LDAP | Client - Gather facts
       ansible.builtin.stat: {path: /etc/sssd}
       register: ldap_sssd_is_installed
-    
+
     - name: LDAP | Client - Install the service
       when:
         - not ldap_sssd_is_installed.stat.exists

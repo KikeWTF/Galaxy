@@ -1,0 +1,6 @@
+---
+- name: service mariadb
+  ansible.builtin.service:
+    name: mariadb
+    state: "{{ mariadb_state if mariadb_state == 'started' else 'stopped' }}"
+    enabled: "{{ true if mariadb_state == 'started' else false }}"

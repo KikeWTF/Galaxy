@@ -1,6 +1,10 @@
 .PHONY: default
 default: all
 
+.PHONY: lint
+lint: .yamllint
+	@yamllint .
+
 .PHONY: all services
 all: proxmox services
 services: loki spiderman ultron

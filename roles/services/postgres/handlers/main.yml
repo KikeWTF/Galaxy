@@ -1,6 +1,0 @@
----
-- name: service postgres
-  ansible.builtin.service:
-    name: postgresql
-    state: "{{ postgres_state if postgres_state == 'started' else 'stopped' }}"
-    enabled: "{{ true if postgres_state == 'started' else false }}"
